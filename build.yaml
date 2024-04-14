@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      trad:rule_builder:
+        generate_for:
+          - lib/src/syntactic_analysis/parser.dart
+
+builders:
+  rule_builder:
+    import: "tool/builder.dart"
+    builder_factories: ["ruleBuilder"]
+    build_extensions: { ".dart": [".rule.g.part"] }
+    applies_builders: ["source_gen:combining_builder"]
