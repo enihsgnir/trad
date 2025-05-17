@@ -86,7 +86,7 @@ class Evaluator extends RecursiveResultVisitor {
   @override
   Object? visitVariableSet(VariableSet node) {
     final value = node.value.accept(this);
-    currentSymbolTable[node.name]!.reference = value;
+    currentSymbolTable.lookup(node.name)!.reference = value;
     return value;
   }
 
