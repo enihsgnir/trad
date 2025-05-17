@@ -4,7 +4,7 @@ import '../abstract_syntax_tree/ast.dart';
 import 'symbol_table.dart';
 
 class PreTasker {
-  const PreTasker();
+  const PreTasker._();
 
   static void preTask() {
     declareBuiltInFunctions();
