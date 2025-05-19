@@ -32,6 +32,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     entry.reference = node;
 
     currentSymbolTable = SymbolTable(currentSymbolTable);
+    entry.functionSymbolTable = currentSymbolTable;
     super.visitFunctionNode(node);
     currentSymbolTable = currentSymbolTable.parent!;
   }

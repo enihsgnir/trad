@@ -186,16 +186,17 @@ class Evaluator extends RecursiveResultVisitor {
       );
     }
 
-    final newSymbolTable = SymbolTable(currentSymbolTable);
-    currentSymbolTable = newSymbolTable;
+    final functionSymbolTable = entry.functionSymbolTable!;
+    final newSymbolTable = functionSymbolTable.copy(currentSymbolTable);
 
     final functionNode = entry.functionNode;
     for (final (i, param) in functionNode.parameters.indexed) {
-      currentSymbolTable[param.name] = SymbolTableEntry(
+      newSymbolTable[param.name] = SymbolTableEntry(
         param.type,
         arguments.positional[i].accept(this),
       );
     }
+    currentSymbolTable = newSymbolTable;
 
     Object? value;
     try {
