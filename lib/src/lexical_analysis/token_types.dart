@@ -44,7 +44,7 @@ class OperatorToken extends StaticToken {
     "+",
     "-",
     "*",
-    "/",
+    "~/",
     "%",
     "?",
     ":",

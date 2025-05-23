@@ -49,19 +49,19 @@ void main() {
     expect(evaluate(code), ["hello, world!"]);
   });
 
-  test("expression test", () {
+  test("arithmetic test", () {
     const code = """
 void main() {
   print(1 + 2);
   print(1 - 2);
   print(1 * 2);
-  // print(1 ~/ 2);
+  print(1 ~/ 2);
   print(1 % 2);
-  // print(1 + 2 * 3 - 4 ~/ 5 % 6);
+  print(1 + 2 * 3 - 4 ~/ 5 % 6);
 }
 """;
 
-    expect(evaluate(code), ["3", "-1", "2", "1"]);
+    expect(evaluate(code), ["3", "-1", "2", "0", "1", "7"]);
   });
 
   test("string test", () {
