@@ -45,4 +45,8 @@ class SymbolTable {
   void operator []=(String name, SymbolTableEntry entry) {
     _entries[name] = entry;
   }
+
+  void dropAll() {
+    _entries.clear();
+  }
 }

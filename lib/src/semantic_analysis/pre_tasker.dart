@@ -7,6 +7,10 @@ class PreTasker {
   const PreTasker._();
 
   static void preTask() {
+    // TODO: do not use global variables for the repeatability of tests
+    globalSymbolTable.dropAll();
+    currentSymbolTable = globalSymbolTable;
+
     declareBuiltInFunctions();
     declareBuiltInOperators();
   }

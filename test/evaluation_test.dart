@@ -35,7 +35,7 @@ List<String> evaluate(String code) {
 }
 
 void main() {
-  setUpAll(() {
+  setUp(() {
     PreTasker.preTask();
   });
 
