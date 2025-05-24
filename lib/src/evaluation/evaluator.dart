@@ -4,6 +4,8 @@ import '../abstract_syntax_tree/ast.dart';
 import '../abstract_syntax_tree/visitor.dart';
 import '../semantic_analysis/symbol_table.dart';
 
+const String _entryPoint = "main";
+
 class Evaluator extends RecursiveResultVisitor {
   const Evaluator();
 
@@ -13,10 +15,10 @@ class Evaluator extends RecursiveResultVisitor {
 
     final main = node.declarations
         .whereType<FunctionDeclaration>()
-        .firstWhereOrNull((element) => element.variable.name == "main");
+        .firstWhereOrNull((element) => element.variable.name == _entryPoint);
 
     if (main == null) {
-      throw Exception("function 'main' not found");
+      throw Exception("function '$_entryPoint' not found");
     }
 
     FunctionInvocation(
