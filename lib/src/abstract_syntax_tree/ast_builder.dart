@@ -117,6 +117,7 @@ extension on ParseTreeNode {
       "expressionStatement" => children[0].toExpressionStatement(),
       "returnStatement" => children[0].toReturnStatement(),
       "ifStatement" => children[0].toIfStatement(),
+      "forStatement" => children[0].toForStatement(),
       "whileStatement" => children[0].toWhileStatement(),
       "breakStatement" => children[0].toBreakStatement(),
       "variableDeclaration" => children[0].toVariableDeclaration(),
@@ -150,6 +151,14 @@ extension on ParseTreeNode {
       null => null,
       _ => throw UnimplementedError("Unsupported else statement: $kind")
     };
+  }
+
+  ForStatement toForStatement() {
+    final variableDeclaration = children[2].toVariableDeclaration();
+    final condition = children[3].toExpression();
+    final increment = children[5].toExpression();
+    final body = children[7].toBlock();
+    return ForStatement(variableDeclaration, condition, increment, body);
   }
 
   WhileStatement toWhileStatement() {

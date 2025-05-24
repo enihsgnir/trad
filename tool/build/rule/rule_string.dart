@@ -64,6 +64,7 @@ statement
   | expressionStatement
   | returnStatement
   | ifStatement
+  | forStatement
   | whileStatement
   | breakStatement
   | variableDeclaration
@@ -86,6 +87,10 @@ elseStatement
   : 'else' ifStatement
   | 'else' block
   |
+  ;
+
+forStatement
+  : 'for' '(' variableDeclaration expression ';' expression ')' block
   ;
 
 whileStatement

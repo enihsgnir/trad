@@ -60,6 +60,25 @@ class Evaluator extends RecursiveResultVisitor {
   }
 
   @override
+  void visitForStatement(ForStatement node) {
+    final ForStatement(:initialization, :condition, :increment, :body) = node;
+
+    initialization.accept(this);
+
+    while (condition.accept(this) as bool) {
+      try {
+        body.accept(this);
+      } on BreakException {
+        break;
+      } on ContinueException {
+        continue;
+      }
+
+      increment.accept(this);
+    }
+  }
+
+  @override
   void visitWhileStatement(WhileStatement node) {
     while (node.condition.accept(this) as bool) {
       try {

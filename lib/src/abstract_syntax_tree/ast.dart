@@ -389,6 +389,31 @@ class BreakStatement extends Statement {
   void visitChildren(Visitor v) {}
 }
 
+class ForStatement extends Statement {
+  final VariableDeclaration initialization;
+  final Expression condition;
+  final Expression increment;
+  final Block body;
+
+  ForStatement(this.initialization, this.condition, this.increment, this.body) {
+    initialization.parent = this;
+    condition.parent = this;
+    increment.parent = this;
+    body.parent = this;
+  }
+
+  @override
+  R accept<R>(StatementVisitor<R> v) => v.visitForStatement(this);
+
+  @override
+  void visitChildren(Visitor v) {
+    initialization.accept(v);
+    condition.accept(v);
+    increment.accept(v);
+    body.accept(v);
+  }
+}
+
 class WhileStatement extends Statement {
   final Expression condition;
   final Statement body;

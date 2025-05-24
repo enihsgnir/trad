@@ -39,6 +39,16 @@ class TypeChecker extends RecursiveVisitor {
   }
 
   @override
+  void visitForStatement(ForStatement node) {
+    final condition = node.condition;
+    if (condition.staticType != const BoolType()) {
+      throw Exception("for statement condition type mismatch");
+    }
+
+    super.visitForStatement(node);
+  }
+
+  @override
   void visitWhileStatement(WhileStatement node) {
     final condition = node.condition;
     if (condition.staticType != const BoolType()) {

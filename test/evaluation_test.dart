@@ -198,6 +198,19 @@ void main() {
     ]);
   });
 
+  test("for loop test", () {
+    const code = """
+void main() {
+  for (int i = 0; i < 5; i = i + 1) {
+    print(i);
+  }
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, ["0", "1", "2", "3", "4"]);
+  });
+
   test("while loop test", () {
     const code = """
 void main() {

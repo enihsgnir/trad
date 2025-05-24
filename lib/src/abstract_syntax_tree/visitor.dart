@@ -57,6 +57,7 @@ abstract class StatementVisitor<R> {
   R visitExpressionStatement(ExpressionStatement node);
   R visitReturnStatement(ReturnStatement node);
   R visitIfStatement(IfStatement node);
+  R visitForStatement(ForStatement node);
   R visitWhileStatement(WhileStatement node);
   R visitBreakStatement(BreakStatement node);
   R visitVariableDeclaration(VariableDeclaration node);
@@ -75,6 +76,8 @@ mixin StatementVisitorDefaultMixin<R> implements StatementVisitor<R> {
   R visitReturnStatement(ReturnStatement node) => defaultStatement(node);
   @override
   R visitIfStatement(IfStatement node) => defaultStatement(node);
+  @override
+  R visitForStatement(ForStatement node) => defaultStatement(node);
   @override
   R visitWhileStatement(WhileStatement node) => defaultStatement(node);
   @override
