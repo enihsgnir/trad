@@ -10,13 +10,13 @@ final List<TokenType> tokenTypes = [
 ];
 
 sealed class TokenType {
-  final RegExp regExp;
+  final RegExp matcher;
 
-  const TokenType(this.regExp);
+  const TokenType(this.matcher);
 }
 
 sealed class IgnorableToken extends TokenType {
-  const IgnorableToken(super.regExp);
+  const IgnorableToken(super.matcher);
 }
 
 class Whitespace extends IgnorableToken {
@@ -32,7 +32,7 @@ class Comment extends IgnorableToken {
 }
 
 sealed class StaticToken extends TokenType {
-  const StaticToken(super.regExp);
+  const StaticToken(super.matcher);
 
   String lexemeFrom(Match match) => match[0]!;
 }

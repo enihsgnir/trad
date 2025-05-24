@@ -13,7 +13,7 @@ class Lexer {
     while (i < source.length) {
       Match? match;
       for (final tokenType in tokenTypes) {
-        match = tokenType.regExp.matchAsPrefix(source, i);
+        match = tokenType.matcher.matchAsPrefix(source, i);
         if (match != null) {
           i = match.end;
 
