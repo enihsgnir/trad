@@ -4,7 +4,7 @@
 
 ## Overview
 
-**Trad** stands for **Tiny Rightmost-derivation Analyzer for Dart**.
+**Trad** stands for **Tiny Rightmost-derivation Analyzer for Dart**. It’s also "**Dart**" spelled in reverse — a fitting name for a project that analyzes Dart syntax from the ground up.
 
 This project is an experimental implementation of a Dart compiler and runtime environment, written entirely in Dart. It explores core language processing, parsing, and execution techniques while relying only on minimal dependencies within the Dart ecosystem.
 
