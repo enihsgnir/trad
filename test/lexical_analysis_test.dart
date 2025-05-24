@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:trad/src/lexical_analysis/lexer.dart';
+import 'package:trad/trad.dart';
 
 void main() {
   test("lexical analysis", () {

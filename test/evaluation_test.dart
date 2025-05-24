@@ -1,13 +1,7 @@
 import 'dart:async';
 
 import 'package:test/test.dart';
-import 'package:trad/src/abstract_syntax_tree/ast_builder.dart';
-import 'package:trad/src/evaluation/evaluator.dart';
-import 'package:trad/src/lexical_analysis/lexer.dart';
-import 'package:trad/src/semantic_analysis/pre_tasker.dart';
-import 'package:trad/src/semantic_analysis/symbol_table_builder.dart';
-import 'package:trad/src/semantic_analysis/type_checker.dart';
-import 'package:trad/src/syntactic_analysis/parser.dart';
+import 'package:trad/trad.dart';
 
 List<String> capturePrintLines(void Function() body) {
   final outputs = <String>[];
