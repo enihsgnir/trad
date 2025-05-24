@@ -82,6 +82,40 @@ void main() {
     ]);
   });
 
+  test("comparison test", () {
+    const code = """
+void main() {
+  print(1 >= 2);
+  print(1 > 2);
+  print(1 <= 2);
+  print(1 < 2);
+  print(1 >= 1);
+  print(1 <= 1);
+  print(1 == 2);
+  print(1 != 2);
+  print(true && false);
+  print(true || false);
+  print(true && true);
+  print(true || true);
+}
+""";
+
+    expect(evaluate(code), [
+      "false",
+      "false",
+      "true",
+      "true",
+      "true",
+      "true",
+      "false",
+      "true",
+      "false",
+      "true",
+      "true",
+      "true",
+    ]);
+  });
+
   test("fibonacci test", () {
     const code = """
 int fibonacci(int n) {
@@ -129,5 +163,86 @@ void main() {
 """;
     final lines = evaluate(code);
     expect(lines, ["1", "1", "2", "6", "24", "120", "2432902008176640000"]);
+  });
+
+  test("no entrypoint test", () {
+    const code = """
+int ft() { return 42; }
+""";
+
+    expect(
+      () => evaluate(code),
+      throwsA(isA<Exception>()),
+    );
+  });
+
+  test("short circuit test", () {
+    const code = """
+bool t() { print("t"); return true; }
+bool f() { print("f"); return false; }
+
+void main() {
+  print(t() && f());
+  print(f() && t());
+  print(t() || f());
+  print(f() || t());
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, [
+      "t",
+      "f",
+      "false",
+      "f",
+      "false",
+      "t",
+      "true",
+      "f",
+      "t",
+      "true",
+    ]);
+  });
+
+  test("while loop test", () {
+    const code = """
+void main() {
+  int i = 0;
+  while (i < 5) {
+    print(i);
+    i = i + 1;
+  }
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, ["0", "1", "2", "3", "4"]);
+  });
+
+  test("global variable test", () {
+    const code = """
+int ft = 42;
+
+void main() {
+  print(ft);
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, ["42"]);
+  });
+
+  test("local variable test", () {
+    const code = """
+int ft = 42;
+
+void main() {
+  int ft = 21;
+  print(ft);
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, ["21"]);
   });
 }
