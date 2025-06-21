@@ -130,6 +130,22 @@ class IntegerLiteralToken extends DynamicToken {
   IntegerLiteralToken() : super("num", RegExp(r'\d+'));
 }
 
+class NumericLiteralToken extends DynamicToken {
+  NumericLiteralToken() : super("numericLiteral", RegExp(numericLiteral));
+
+  static const numericLiteral = '$hexNumber|$number';
+
+  static const number = '($digit+$dot$digit+|$digit+|$dot$digit+)($exponent)?';
+
+  static const exponent = '[eE][+-]?$digit+';
+
+  static const hexNumber = '0[xX][0-9a-fA-F]+';
+
+  static const digit = r'\d';
+
+  static const dot = r'\.';
+}
+
 class StringLiteralToken extends DynamicToken {
   /// `(["'])((?:\\\1|(?:(?!\1)).)*)\1`
   StringLiteralToken()
