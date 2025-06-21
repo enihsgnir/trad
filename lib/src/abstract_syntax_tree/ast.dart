@@ -551,6 +551,19 @@ class DynamicType extends TradType {
   String toString() => "dynamic";
 }
 
+class NumType extends TradType {
+  const NumType();
+
+  @override
+  R accept<R>(TradTypeVisitor<R> v) => v.visitNumType(this);
+
+  @override
+  void visitChildren(Visitor v) {}
+
+  @override
+  String toString() => "num";
+}
+
 class IntType extends TradType {
   const IntType();
 
@@ -562,6 +575,19 @@ class IntType extends TradType {
 
   @override
   String toString() => "int";
+}
+
+class DoubleType extends TradType {
+  const DoubleType();
+
+  @override
+  R accept<R>(TradTypeVisitor<R> v) => v.visitDoubleType(this);
+
+  @override
+  void visitChildren(Visitor v) {}
+
+  @override
+  String toString() => "double";
 }
 
 class StringType extends TradType {

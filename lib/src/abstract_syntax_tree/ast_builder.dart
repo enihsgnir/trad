@@ -86,7 +86,9 @@ extension on ParseTreeNode {
   TradType toType() {
     final kind = children[0].symbol.name;
     return switch (kind) {
+      "num" => const NumType(),
       "int" => const IntType(),
+      "double" => const DoubleType(),
       "String" => const StringType(),
       "bool" => const BoolType(),
       "List" => ListType(children[2].toType()),

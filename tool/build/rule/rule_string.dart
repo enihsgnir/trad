@@ -43,7 +43,9 @@ functionBody
   ;
 
 type
-  : 'int'
+  : 'num'
+  | 'int'
+  | 'double'
   | 'String'
   | 'bool'
   | 'List' '<' type '>'

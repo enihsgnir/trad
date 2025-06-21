@@ -128,7 +128,9 @@ abstract class TradTypeVisitor<R> {
   const TradTypeVisitor();
 
   R visitDynamicType(DynamicType node);
+  R visitNumType(NumType node);
   R visitIntType(IntType node);
+  R visitDoubleType(DoubleType node);
   R visitStringType(StringType node);
   R visitBoolType(BoolType node);
   R visitListType(ListType node);
@@ -142,7 +144,11 @@ mixin TradTypeVisitorDefaultMixin<R> implements TradTypeVisitor<R> {
   @override
   R visitDynamicType(DynamicType node) => defaultTradType(node);
   @override
+  R visitNumType(NumType node) => defaultTradType(node);
+  @override
   R visitIntType(IntType node) => defaultTradType(node);
+  @override
+  R visitDoubleType(DoubleType node) => defaultTradType(node);
   @override
   R visitStringType(StringType node) => defaultTradType(node);
   @override
