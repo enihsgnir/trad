@@ -290,7 +290,7 @@ extension on ParseTreeNode {
   Expression toLiteral() {
     final kind = children[0].symbol.name;
     return switch (kind) {
-      "num" => IntLiteral(int.parse(children[0].symbol.toString())),
+      "intLiteral" => IntLiteral(int.parse(children[0].symbol.toString())),
       "str" => StringLiteral(children[0].symbol.toString()),
       "true" => BoolLiteral(true),
       "false" => BoolLiteral(false),

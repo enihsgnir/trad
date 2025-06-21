@@ -127,7 +127,7 @@ class IdentifierToken extends DynamicToken {
 }
 
 class IntegerLiteralToken extends DynamicToken {
-  IntegerLiteralToken() : super("num", RegExp(r'\d+'));
+  IntegerLiteralToken() : super("intLiteral", RegExp(r'\d+'));
 }
 
 class NumericLiteralToken extends DynamicToken {

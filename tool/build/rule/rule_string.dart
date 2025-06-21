@@ -168,7 +168,7 @@ primary
   ;
 
 literal
-  : num
+  : intLiteral
   | str
   | 'true'
   | 'false'
