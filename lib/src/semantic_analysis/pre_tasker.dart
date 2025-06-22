@@ -37,6 +37,7 @@ class PreTasker {
     globalSymbolTable[id] = SymbolTableEntry(signature, func);
   }
 
+  // TODO: deprecate this when "class", "operator" and "inheritance" system is implemented
   static void declareBuiltInOperators() {
     const arithmetic = FunctionType([IntType(), IntType()], IntType());
     _declareOperator("int", "+", arithmetic, (int a, int b) => a + b);
