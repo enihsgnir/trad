@@ -69,7 +69,15 @@ class SymbolTableBuilder extends RecursiveVisitor {
   void visitBinaryExpression(BinaryExpression node) {
     super.visitBinaryExpression(node);
 
-    final name = "${node.left.staticType}::${node.operator}";
+    final staticType = node.left.staticType;
+    final operator = node.operator;
+
+    if (operator == "!=") {
+      node.staticType = const BoolType();
+      return;
+    }
+
+    final name = "$staticType::$operator";
     final entry = globalSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("operator $name is not defined");
@@ -83,7 +91,15 @@ class SymbolTableBuilder extends RecursiveVisitor {
   void visitUnaryExpression(UnaryExpression node) {
     super.visitUnaryExpression(node);
 
-    final name = "${node.operand.staticType}::unary::${node.operator}";
+    final staticType = node.operand.staticType;
+    final operator = node.operator;
+
+    if (staticType is BoolType && operator == "!") {
+      node.staticType = const BoolType();
+      return;
+    }
+
+    final name = "$staticType::unary::$operator";
     final entry = globalSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("operator $name is not defined");

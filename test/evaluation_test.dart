@@ -76,6 +76,39 @@ void main() {
     ]);
   });
 
+  test("negation test", () {
+    const code = """
+void main() {
+  print(!true);
+  print(!false);
+}
+""";
+
+    expect(evaluate(code), ["false", "true"]);
+  });
+
+  test("equality test", () {
+    const code = """
+void main() {
+  print(1 == 2);
+  print(1 != 2);
+  print("hello" == "world");
+  print("hello" != "world");
+  print(true == false);
+  print(true != false);
+}
+""";
+
+    expect(evaluate(code), [
+      "false",
+      "true",
+      "false",
+      "true",
+      "false",
+      "true",
+    ]);
+  });
+
   test("comparison test", () {
     const code = """
 void main() {
@@ -85,8 +118,6 @@ void main() {
   print(1 < 2);
   print(1 >= 1);
   print(1 <= 1);
-  print(1 == 2);
-  print(1 != 2);
   print(true && false);
   print(true || false);
   print(true && true);
@@ -100,8 +131,6 @@ void main() {
       "true",
       "true",
       "true",
-      "true",
-      "false",
       "true",
       "false",
       "true",

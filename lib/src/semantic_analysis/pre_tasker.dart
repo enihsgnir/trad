@@ -67,12 +67,5 @@ class PreTasker {
 
     const boolEq = FunctionType([BoolType(), BoolType()], BoolType());
     _declareOperator("bool", "==", boolEq, (bool a, bool b) => a == b);
-
-    // TODO: temporary operators (remove these when node replacer is implemented)
-    const not = FunctionType([BoolType()], BoolType());
-    _declareOperator("bool", "!", not, (bool a) => !a, isUnary: true);
-    _declareOperator("int", "!=", relational, (int a, int b) => a != b);
-    _declareOperator("String", "!=", strEq, (String a, String b) => a != b);
-    _declareOperator("bool", "!=", boolEq, (bool a, bool b) => a != b);
   }
 }
