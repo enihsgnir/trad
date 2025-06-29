@@ -7,6 +7,7 @@ class SymbolTableEntry {
   final TradType type;
   Object? reference;
   SymbolTable? functionSymbolTable;
+  SymbolTable? blockSymbolTable;
 
   SymbolTableEntry(this.type, [this.reference]);
 

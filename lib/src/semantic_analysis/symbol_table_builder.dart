@@ -124,4 +124,29 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
     super.visitFunctionInvocation(node);
   }
+
+  @override
+  void visitBlock(Block node) {
+    if (node.parent is! Block) {
+      // Avoid duplicating symbol tables: outer constructs (e.g. functions,
+      // for-loops) already create them. Only initialize a new table for inner
+      // (nested) blocks.
+      return super.visitBlock(node);
+    }
+
+    final name = "block@${node.hashCode}";
+    if (currentSymbolTable.lookup(name) != null) {
+      throw Exception("symbol $name is already defined");
+    }
+
+    final blockSymbolTable = SymbolTable(currentSymbolTable);
+
+    final entry = SymbolTableEntry(const VoidType());
+    entry.blockSymbolTable = blockSymbolTable;
+    currentSymbolTable[name] = entry;
+
+    currentSymbolTable = blockSymbolTable;
+    super.visitBlock(node);
+    currentSymbolTable = currentSymbolTable.parent!;
+  }
 }

@@ -268,17 +268,37 @@ void main() {
     expect(lines, ["42"]);
   });
 
-  test("local variable test", () {
+  test("variable reassignment test", () {
     const code = """
 int ft = 42;
 
 void main() {
-  int ft = 21;
+  ft = 21;
   print(ft);
 }
 """;
 
     final lines = evaluate(code);
     expect(lines, ["21"]);
+  });
+
+  test("variable shadowing test", () {
+    const code = """
+int ft = 42;
+
+void main() {
+  int ft = 21;
+
+  {
+    int a = 7;
+    print(a);
+  }
+
+  print(ft);
+}
+""";
+
+    final lines = evaluate(code);
+    expect(lines, ["7", "21"]);
   });
 }

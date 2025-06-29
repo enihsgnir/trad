@@ -42,6 +42,25 @@ class Evaluator extends RecursiveResultVisitor {
   void visitFunctionDeclaration(FunctionDeclaration node) {}
 
   @override
+  void visitBlock(Block node) {
+    if (node.parent is! Block) {
+      // Avoid duplicating symbol tables: outer constructs (e.g. functions,
+      // for-loops) already create them. Only initialize a new table for inner
+      // (nested) blocks.
+      super.visitBlock(node);
+      return;
+    }
+
+    final name = "block@${node.hashCode}";
+    final entry = currentSymbolTable.lookup(name)!;
+
+    final blockSymbolTable = entry.blockSymbolTable!;
+    currentSymbolTable = blockSymbolTable;
+    super.visitBlock(node);
+    currentSymbolTable = currentSymbolTable.parent!;
+  }
+
+  @override
   Never visitReturnStatement(ReturnStatement node) {
     final expression = node.expression;
     if (expression == null) {
