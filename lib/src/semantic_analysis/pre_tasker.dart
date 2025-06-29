@@ -33,7 +33,7 @@ class PreTasker {
     Function func, {
     bool isUnary = false,
   }) {
-    final id = type + (isUnary ? "::unary::" : "::") + op;
+    final id = type + (isUnary ? ".unary" : ".") + op;
     globalSymbolTable[id] = SymbolTableEntry(signature, func);
   }
 

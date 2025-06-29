@@ -77,7 +77,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
       return;
     }
 
-    final name = "$staticType::$operator";
+    final name = "$staticType.$operator";
     final entry = globalSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("operator $name is not defined");
@@ -99,7 +99,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
       return;
     }
 
-    final name = "$staticType::unary::$operator";
+    final name = "$staticType.unary$operator";
     final entry = globalSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("operator $name is not defined");

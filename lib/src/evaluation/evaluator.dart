@@ -165,7 +165,7 @@ class Evaluator extends RecursiveResultVisitor {
       ).accept(this);
     }
 
-    final name = "${left.staticType}::$operator";
+    final name = "${left.staticType}.$operator";
     final entry = currentSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("binary operator '$operator' not defined");
@@ -189,7 +189,7 @@ class Evaluator extends RecursiveResultVisitor {
       return true;
     }
 
-    final name = "${operand.staticType}::unary::$operator";
+    final name = "${operand.staticType}.unary$operator";
     final entry = currentSymbolTable.lookup(name);
     if (entry == null) {
       throw Exception("unary operator '$operator' not defined");
