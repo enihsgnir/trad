@@ -6,6 +6,7 @@ SymbolTable currentSymbolTable = globalSymbolTable;
 class SymbolTableEntry {
   final TradType type;
   Object? reference;
+  SymbolTable? classSymbolTable;
   SymbolTable? functionSymbolTable;
   SymbolTable? blockSymbolTable;
 

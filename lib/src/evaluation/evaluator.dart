@@ -29,6 +29,17 @@ class Evaluator extends RecursiveResultVisitor {
   }
 
   @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final name = node.name;
+    final entry = currentSymbolTable.lookup(name)!;
+
+    final classSymbolTable = entry.classSymbolTable!;
+    currentSymbolTable = classSymbolTable;
+    super.visitClassDeclaration(node);
+    currentSymbolTable = currentSymbolTable.parent!;
+  }
+
+  @override
   void visitVariableDeclaration(VariableDeclaration node) {
     final VariableDeclaration(:name, :initializer) = node;
 

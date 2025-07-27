@@ -25,9 +25,35 @@ extension on ParseTreeNode {
   Declaration toDefinition() {
     final kind = children[0].symbol.name;
     return switch (kind) {
+      "classDeclaration" => children[0].toClassDeclaration(),
       "variableDeclaration" => children[0].toVariableDeclaration(),
       "functionDeclaration" => children[0].toFunctionDeclaration(),
       _ => throw UnimplementedError("Unsupported top-level definition: $kind")
+    };
+  }
+
+  ClassDeclaration toClassDeclaration() {
+    final id = children[1].symbol.toString();
+    final members = children[3].toClassMemberDeclarations();
+    return ClassDeclaration(id, members);
+  }
+
+  List<ClassMemberDeclaration> toClassMemberDeclarations() {
+    if (children.isEmpty) {
+      return [];
+    }
+    return [
+      ...children[0].toClassMemberDeclarations(),
+      children[1].toClassMemberDeclaration(),
+    ];
+  }
+
+  ClassMemberDeclaration toClassMemberDeclaration() {
+    final kind = children[0].symbol.name;
+    return switch (kind) {
+      "variableDeclaration" => children[0].toVariableDeclaration(),
+      "functionDeclaration" => children[0].toFunctionDeclaration(),
+      _ => throw UnimplementedError("Unsupported class member: $kind")
     };
   }
 

@@ -301,4 +301,29 @@ void main() {
     final lines = evaluate(code);
     expect(lines, ["7", "21"]);
   });
+
+  group("class test group", () {
+    test("class declaration test", () {
+      const code = """
+class A {
+  int a = 21;
+
+  void printA() {
+    print(a);
+  }
+
+  int add(int b) {
+    return a + b;
+  }
+}
+
+void main() {
+  print(42);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["42"]);
+    });
+  });
 }

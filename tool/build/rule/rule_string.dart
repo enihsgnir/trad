@@ -10,6 +10,21 @@ definitions
   ;
 
 definition
+  : classDeclaration
+  | variableDeclaration
+  | functionDeclaration
+  ;
+
+classDeclaration
+  : 'class' id '{' classMemberDeclarations '}'
+  ;
+
+classMemberDeclarations
+  : classMemberDeclarations classMemberDeclaration
+  |
+  ;
+
+classMemberDeclaration
   : variableDeclaration
   | functionDeclaration
   ;

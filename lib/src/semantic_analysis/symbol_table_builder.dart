@@ -6,6 +6,26 @@ class SymbolTableBuilder extends RecursiveVisitor {
   const SymbolTableBuilder();
 
   @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    final name = node.name;
+
+    if (currentSymbolTable.lookup(name) != null) {
+      throw Exception("symbol $name is already defined");
+    }
+
+    final classSymbolTable = SymbolTable(currentSymbolTable);
+
+    final entry = SymbolTableEntry(const VoidType());
+    entry.reference = node;
+    entry.classSymbolTable = classSymbolTable;
+    currentSymbolTable[name] = entry;
+
+    currentSymbolTable = classSymbolTable;
+    super.visitClassDeclaration(node);
+    currentSymbolTable = currentSymbolTable.parent!;
+  }
+
+  @override
   void visitVariableDeclaration(VariableDeclaration node) {
     if (currentSymbolTable[node.name] != null) {
       throw Exception("symbol ${node.name} is already defined");
@@ -28,7 +48,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
   @override
   void visitFunctionNode(FunctionNode node) {
     final function = node.parent! as FunctionDeclaration;
-    final entry = globalSymbolTable.lookup(function.variable.name)!;
+    final entry = currentSymbolTable.lookup(function.variable.name)!;
     entry.reference = node;
 
     currentSymbolTable = SymbolTable(currentSymbolTable);

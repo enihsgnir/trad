@@ -487,7 +487,26 @@ sealed class Declaration extends Statement {
   R accept<R>(StatementVisitor<R> v);
 }
 
-class VariableDeclaration extends Declaration {
+class ClassDeclaration extends Declaration {
+  String name;
+  List<ClassMemberDeclaration> members;
+
+  ClassDeclaration(this.name, this.members) {
+    setParents(members, this);
+  }
+
+  @override
+  R accept<R>(StatementVisitor<R> v) => v.visitClassDeclaration(this);
+
+  @override
+  void visitChildren(Visitor v) {
+    visitList(members, v);
+  }
+}
+
+mixin ClassMemberDeclaration on Declaration {}
+
+class VariableDeclaration extends Declaration with ClassMemberDeclaration {
   String name;
   TradType type;
   Expression? initializer;
@@ -510,7 +529,7 @@ class VariableDeclaration extends Declaration {
   }
 }
 
-class FunctionDeclaration extends Declaration {
+class FunctionDeclaration extends Declaration with ClassMemberDeclaration {
   VariableDeclaration variable; // Is final and has no initializer.
   FunctionNode function;
 
