@@ -119,6 +119,7 @@ extension on ParseTreeNode {
       "bool" => const BoolType(),
       "List" => ListType(children[2].toType()),
       "void" => const VoidType(),
+      "id" => ClassType(children[0].symbol.toString()),
       _ => throw UnimplementedError("Unsupported type: $kind")
     };
   }

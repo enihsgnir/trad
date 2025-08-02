@@ -689,6 +689,21 @@ class FunctionType extends TradType {
   }
 }
 
+class ClassType extends TradType {
+  final String name;
+
+  const ClassType(this.name);
+
+  @override
+  R accept<R>(TradTypeVisitor<R> v) => v.visitClassType(this);
+
+  @override
+  void visitChildren(Visitor v) {}
+
+  @override
+  String toString() => name;
+}
+
 // Internal Functions
 
 void setParents(List<TreeNode> nodes, TreeNode parent) {

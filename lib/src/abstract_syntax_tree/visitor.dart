@@ -139,6 +139,7 @@ abstract class TradTypeVisitor<R> {
   R visitListType(ListType node);
   R visitVoidType(VoidType node);
   R visitFunctionType(FunctionType node);
+  R visitClassType(ClassType node);
 }
 
 mixin TradTypeVisitorDefaultMixin<R> implements TradTypeVisitor<R> {
@@ -162,6 +163,8 @@ mixin TradTypeVisitorDefaultMixin<R> implements TradTypeVisitor<R> {
   R visitVoidType(VoidType node) => defaultTradType(node);
   @override
   R visitFunctionType(FunctionType node) => defaultTradType(node);
+  @override
+  R visitClassType(ClassType node) => defaultTradType(node);
 }
 
 abstract class Visitor<R> implements TreeVisitor<R>, TradTypeVisitor<R> {}

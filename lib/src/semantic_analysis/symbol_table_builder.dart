@@ -15,7 +15,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
     final classSymbolTable = SymbolTable(currentSymbolTable);
 
-    final entry = SymbolTableEntry(const VoidType());
+    final entry = SymbolTableEntry(ClassType(name));
     entry.reference = node;
     entry.classSymbolTable = classSymbolTable;
     currentSymbolTable[name] = entry;

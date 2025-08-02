@@ -65,6 +65,7 @@ type
   | 'bool'
   | 'List' '<' type '>'
   | 'void'
+  | id
   ;
 
 block
