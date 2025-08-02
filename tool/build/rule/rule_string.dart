@@ -183,6 +183,7 @@ primary
   | id
   | '(' expression ')'
   | functionInvocation
+  | defaultConstructorInvocation
   ;
 
 literal
@@ -210,5 +211,9 @@ functionInvocation
 arguments
   : '(' expressionList ')'
   | '(' ')'
+  ;
+
+defaultConstructorInvocation
+  : 'new' id '(' ')'
   ;
 """;

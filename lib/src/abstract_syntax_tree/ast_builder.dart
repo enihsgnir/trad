@@ -312,6 +312,8 @@ extension on ParseTreeNode {
       "id" => VariableGet(children[0].symbol.toString()),
       "(" => children[1].toExpression(),
       "functionInvocation" => children[0].toFunctionInvocation(),
+      "defaultConstructorInvocation" =>
+        children[0].toDefaultConstructorInvocation(),
       _ => throw UnimplementedError("Unsupported primary expression: $kind")
     };
   }
@@ -356,5 +358,10 @@ extension on ParseTreeNode {
       return Arguments.empty();
     }
     return Arguments(children[1].toExpressionList());
+  }
+
+  DefaultConstructorInvocation toDefaultConstructorInvocation() {
+    final id = children[1].symbol.toString();
+    return DefaultConstructorInvocation(id);
   }
 }

@@ -325,5 +325,20 @@ void main() {
       final lines = evaluate(code);
       expect(lines, ["42"]);
     });
+
+    test("class instantiation test", () {
+      const code = """
+class A {}
+
+void main() {
+  A a = new A();
+
+  print(42);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["42"]);
+    });
   });
 }

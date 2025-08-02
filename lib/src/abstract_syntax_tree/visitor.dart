@@ -15,6 +15,7 @@ abstract class ExpressionVisitor<R> {
   R visitBoolLiteral(BoolLiteral node);
   R visitListLiteral(ListLiteral node);
   R visitFunctionInvocation(FunctionInvocation node);
+  R visitDefaultConstructorInvocation(DefaultConstructorInvocation node);
 }
 
 mixin ExpressionVisitorDefaultMixin<R> implements ExpressionVisitor<R> {
@@ -48,6 +49,9 @@ mixin ExpressionVisitorDefaultMixin<R> implements ExpressionVisitor<R> {
   R visitListLiteral(ListLiteral node) => defaultExpression(node);
   @override
   R visitFunctionInvocation(FunctionInvocation node) => defaultExpression(node);
+  @override
+  R visitDefaultConstructorInvocation(DefaultConstructorInvocation node) =>
+      defaultExpression(node);
 }
 
 abstract class StatementVisitor<R> {

@@ -147,6 +147,22 @@ class FunctionInvocation extends Expression {
   }
 }
 
+class DefaultConstructorInvocation extends Expression {
+  final String className;
+
+  DefaultConstructorInvocation(this.className);
+
+  @override
+  TradType get staticType => ClassType(className);
+
+  @override
+  R accept<R>(ExpressionVisitor<R> v) =>
+      v.visitDefaultConstructorInvocation(this);
+
+  @override
+  void visitChildren(Visitor v) {}
+}
+
 class ConditionalExpression extends Expression {
   Expression condition;
   Expression then;
@@ -702,6 +718,16 @@ class ClassType extends TradType {
 
   @override
   String toString() => name;
+
+  @override
+  bool operator ==(Object other) {
+    return other is ClassType && other.name == name;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(runtimeType, name);
+  }
 }
 
 // Internal Functions
