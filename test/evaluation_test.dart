@@ -24,7 +24,7 @@ List<String> evaluate(String code) {
   ast.accept(const SymbolTableBuilder());
   ast.accept(const TypeChecker());
 
-  final outputs = capturePrintLines(() => ast.accept(const Evaluator()));
+  final outputs = capturePrintLines(() => ast.accept(Evaluator()));
   return outputs;
 }
 
@@ -339,6 +339,33 @@ void main() {
 
       final lines = evaluate(code);
       expect(lines, ["42"]);
+    });
+
+    test("class member variable get test", () {
+      const code = """
+class A {
+  int ma = 21;
+  int mb = 42;
+}
+
+class B {
+  int ma = 24;
+  int mb = 12;
+}
+
+void main() {
+  A ia = new A();
+  print(ia.ma);
+  print(ia.mb);
+
+  B ib = new B();
+  print(ib.ma);
+  print(ib.mb);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["21", "42", "24", "12"]);
     });
   });
 }

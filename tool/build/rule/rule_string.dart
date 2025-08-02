@@ -184,6 +184,7 @@ primary
   | '(' expression ')'
   | functionInvocation
   | defaultConstructorInvocation
+  | memberVariableGet
   ;
 
 literal
@@ -215,5 +216,9 @@ arguments
 
 defaultConstructorInvocation
   : 'new' id '(' ')'
+  ;
+
+memberVariableGet
+  : primary '.' id
   ;
 """;

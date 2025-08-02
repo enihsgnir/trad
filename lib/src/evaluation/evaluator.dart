@@ -3,11 +3,15 @@ import 'package:collection/collection.dart';
 import '../abstract_syntax_tree/ast.dart';
 import '../abstract_syntax_tree/visitor.dart';
 import '../semantic_analysis/symbol_table.dart';
+import 'heap.dart';
+import 'instance.dart';
 
 const String _entryPoint = "main";
 
 class Evaluator extends RecursiveResultVisitor {
-  const Evaluator();
+  final _heap = Heap();
+
+  Evaluator();
 
   @override
   void visitProgram(Program node) {
@@ -261,6 +265,36 @@ class Evaluator extends RecursiveResultVisitor {
     newSymbolTable.parent = null;
 
     return value;
+  }
+
+  @override
+  int visitDefaultConstructorInvocation(DefaultConstructorInvocation node) {
+    final classEntry = currentSymbolTable.lookup(node.className)!;
+    final classRef = classEntry.reference! as ClassDeclaration;
+
+    final instance = Instance(classRef);
+
+    final fields = classRef.fields;
+    for (final field in fields) {
+      final name = field.name;
+      final value = field.initializer?.accept(this);
+      instance.fields[name] = value;
+    }
+
+    return _heap.allocate(instance);
+  }
+
+  @override
+  Object? visitMemberVariableGet(MemberVariableGet node) {
+    final receiver = node.receiver;
+    if (receiver.staticType is! ClassType) {
+      throw Exception("receiver is not an instance of a class");
+    }
+
+    final instanceId = node.receiver.accept(this) as int;
+    final instance = _heap.get(instanceId)!;
+
+    return instance.fields[node.name];
   }
 }
 

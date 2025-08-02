@@ -66,6 +66,7 @@ class OperatorToken extends StaticToken {
     "!",
     "&&",
     "||",
+    ".",
   ];
 }
 

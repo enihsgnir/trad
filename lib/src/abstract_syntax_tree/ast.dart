@@ -163,6 +163,26 @@ class DefaultConstructorInvocation extends Expression {
   void visitChildren(Visitor v) {}
 }
 
+class MemberVariableGet extends Expression {
+  final Expression receiver;
+  final String name;
+
+  MemberVariableGet(this.receiver, this.name) {
+    receiver.parent = this;
+  }
+
+  @override
+  TradType staticType = const DynamicType();
+
+  @override
+  R accept<R>(ExpressionVisitor<R> v) => v.visitMemberVariableGet(this);
+
+  @override
+  void visitChildren(Visitor v) {
+    receiver.accept(v);
+  }
+}
+
 class ConditionalExpression extends Expression {
   Expression condition;
   Expression then;
@@ -510,6 +530,11 @@ class ClassDeclaration extends Declaration {
   ClassDeclaration(this.name, this.members) {
     setParents(members, this);
   }
+
+  List<VariableDeclaration> get fields =>
+      members.whereType<VariableDeclaration>().toList();
+  List<FunctionDeclaration> get methods =>
+      members.whereType<FunctionDeclaration>().toList();
 
   @override
   R accept<R>(StatementVisitor<R> v) => v.visitClassDeclaration(this);
