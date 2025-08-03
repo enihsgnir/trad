@@ -183,6 +183,36 @@ class MemberVariableGet extends Expression {
   }
 }
 
+class MemberFunctionInvocation extends Expression {
+  final Expression receiver;
+  final String name;
+  final Arguments arguments;
+  FunctionType functionType;
+
+  MemberFunctionInvocation(
+    this.receiver,
+    this.name,
+    this.arguments, {
+    this.functionType = const FunctionType([]),
+  }) {
+    receiver.parent = this;
+    arguments.parent = this;
+  }
+
+  @override
+  TradType get staticType => functionType.returnType;
+
+  @override
+  R accept<R>(ExpressionVisitor<R> v) => v.visitMemberFunctionInvocation(this);
+
+  @override
+  void visitChildren(Visitor v) {
+    receiver.accept(v);
+    arguments.accept(v);
+    functionType.accept(v);
+  }
+}
+
 class ConditionalExpression extends Expression {
   Expression condition;
   Expression then;

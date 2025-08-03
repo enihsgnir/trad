@@ -367,5 +367,36 @@ void main() {
       final lines = evaluate(code);
       expect(lines, ["21", "42", "24", "12"]);
     });
+
+    test("class method invocation test", () {
+      const code = """
+class A {
+  int a = 42;
+
+  void printA() {
+    print(a);
+  }
+}
+
+class B {
+  int b = 21;
+
+  void printB(int b) {
+    print(b);
+  }
+}
+
+void main() {
+  A a = new A();
+  a.printA();
+
+  B b = new B();
+  b.printB(42);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["42", "42"]);
+    });
   });
 }

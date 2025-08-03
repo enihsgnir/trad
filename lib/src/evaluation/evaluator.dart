@@ -296,6 +296,59 @@ class Evaluator extends RecursiveResultVisitor {
 
     return instance.fields[node.name];
   }
+
+  @override
+  Object? visitMemberFunctionInvocation(MemberFunctionInvocation node) {
+    final MemberFunctionInvocation(:receiver, :name, :arguments) = node;
+
+    final receiverType = receiver.staticType;
+    if (receiverType is! ClassType) {
+      throw Exception("receiver is not an instance of a class");
+    }
+
+    final classEntry = globalSymbolTable.lookup(receiverType.name)!;
+    final classSymbolTable = classEntry.classSymbolTable!;
+
+    final instanceId = receiver.accept(this) as int;
+    final instance = _heap.get(instanceId)!;
+
+    // temporary symbol table for the instance
+    final instanceSymbolTable = SymbolTable(currentSymbolTable);
+    for (final MapEntry(:key, :value) in instance.fields.entries) {
+      final type = classSymbolTable.lookup(key)!.type;
+      instanceSymbolTable[key] = SymbolTableEntry(type, value);
+    }
+    currentSymbolTable = instanceSymbolTable;
+
+    final functionEntry = classSymbolTable.lookup(name)!;
+    final functionSymbolTable = functionEntry.functionSymbolTable!;
+    final newSymbolTable = functionSymbolTable.copy(currentSymbolTable);
+
+    final functionNode = functionEntry.functionNode;
+    for (final (i, param) in functionNode.parameters.indexed) {
+      newSymbolTable[param.name] = SymbolTableEntry(
+        param.type,
+        arguments.positional[i].accept(this),
+      );
+    }
+    currentSymbolTable = newSymbolTable;
+
+    Object? value;
+    try {
+      functionNode.body.accept(this);
+    } on ReturnException catch (e) {
+      value = e.value;
+    }
+
+    // restore the current symbol table twice to remove the temporary
+    // symbol tables created for the function and the instance
+    currentSymbolTable = currentSymbolTable.parent!;
+    newSymbolTable.parent = null;
+    currentSymbolTable = currentSymbolTable.parent!;
+    instanceSymbolTable.parent = null;
+
+    return value;
+  }
 }
 
 class BreakException implements Exception {}

@@ -185,6 +185,7 @@ primary
   | functionInvocation
   | defaultConstructorInvocation
   | memberVariableGet
+  | memberFunctionInvocation
   ;
 
 literal
@@ -220,5 +221,9 @@ defaultConstructorInvocation
 
 memberVariableGet
   : primary '.' id
+  ;
+
+memberFunctionInvocation
+  : primary '.' id arguments
   ;
 """;
