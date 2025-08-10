@@ -268,7 +268,9 @@ class Evaluator extends RecursiveResultVisitor {
   }
 
   @override
-  int visitDefaultConstructorInvocation(DefaultConstructorInvocation node) {
+  InstanceId visitDefaultConstructorInvocation(
+    DefaultConstructorInvocation node,
+  ) {
     final classEntry = currentSymbolTable.lookup(node.className)!;
     final classRef = classEntry.reference! as ClassDeclaration;
 
@@ -291,7 +293,7 @@ class Evaluator extends RecursiveResultVisitor {
       throw Exception("receiver is not an instance of a class");
     }
 
-    final instanceId = node.receiver.accept(this) as int;
+    final instanceId = node.receiver.accept(this) as InstanceId;
     final instance = _heap.get(instanceId)!;
 
     return instance.fields[node.name];
@@ -304,7 +306,7 @@ class Evaluator extends RecursiveResultVisitor {
       throw Exception("receiver is not an instance of a class");
     }
 
-    final instanceId = node.receiver.accept(this) as int;
+    final instanceId = node.receiver.accept(this) as InstanceId;
     final instance = _heap.get(instanceId)!;
 
     final value = node.value.accept(this);
@@ -323,7 +325,7 @@ class Evaluator extends RecursiveResultVisitor {
     final classEntry = globalSymbolTable.lookup(receiverType.name)!;
     final classSymbolTable = classEntry.classSymbolTable!;
 
-    final instanceId = receiver.accept(this) as int;
+    final instanceId = receiver.accept(this) as InstanceId;
     final instance = _heap.get(instanceId)!;
 
     // temporary symbol table for the instance
