@@ -368,6 +368,29 @@ void main() {
       expect(lines, ["21", "42", "24", "12"]);
     });
 
+    test("class member variable set test", () {
+      const code = """
+class A {
+  int ma = 21;
+  int mb = 42;
+}
+
+void main() {
+  A ia = new A();
+  print(ia.ma);
+  print(ia.mb);
+
+  ia.ma = 12;
+  ia.mb = 24;
+  print(ia.ma);
+  print(ia.mb);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["21", "42", "12", "24"]);
+    });
+
     test("class method invocation test", () {
       const code = """
 class A {

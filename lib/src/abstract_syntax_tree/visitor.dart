@@ -17,6 +17,7 @@ abstract class ExpressionVisitor<R> {
   R visitFunctionInvocation(FunctionInvocation node);
   R visitDefaultConstructorInvocation(DefaultConstructorInvocation node);
   R visitMemberVariableGet(MemberVariableGet node);
+  R visitMemberVariableSet(MemberVariableSet node);
   R visitMemberFunctionInvocation(MemberFunctionInvocation node);
 }
 
@@ -56,6 +57,8 @@ mixin ExpressionVisitorDefaultMixin<R> implements ExpressionVisitor<R> {
       defaultExpression(node);
   @override
   R visitMemberVariableGet(MemberVariableGet node) => defaultExpression(node);
+  @override
+  R visitMemberVariableSet(MemberVariableSet node) => defaultExpression(node);
   @override
   R visitMemberFunctionInvocation(MemberFunctionInvocation node) =>
       defaultExpression(node);

@@ -208,16 +208,33 @@ extension on ParseTreeNode {
   Expression toExpression() {
     final kind = children[0].symbol.name;
     return switch (kind) {
-      "assignmentExpression" => children[0].toVariableSet(),
+      "assignmentExpression" => children[0].toAssignmentExpression(),
       "conditionalExpression" => children[0].toConditionalExpression(),
       _ => throw UnimplementedError("Unsupported expression: $kind")
     };
+  }
+
+  Expression toAssignmentExpression() {
+    if (children[1].symbol.name == "=") {
+      return toVariableSet();
+    } else if (children[1].symbol.name == ".") {
+      return toMemberVariableSet();
+    }
+    // TODO: handle cases more gracefully
+    throw UnimplementedError("Unsupported assignment expression");
   }
 
   VariableSet toVariableSet() {
     final id = children[0].symbol.toString();
     final expression = children[2].toExpression();
     return VariableSet(id, expression);
+  }
+
+  MemberVariableSet toMemberVariableSet() {
+    final primary = children[0].toPrimary();
+    final id = children[2].symbol.toString();
+    final expression = children[4].toExpression();
+    return MemberVariableSet(primary, id, expression);
   }
 
   Expression toConditionalExpression() {

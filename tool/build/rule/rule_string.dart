@@ -128,6 +128,7 @@ expression
 assignmentExpression
   : id '=' expression
   // | id '[' expression ']' '=' expression
+  | primary '.' id '=' expression
   ;
 
 conditionalExpression

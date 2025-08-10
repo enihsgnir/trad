@@ -298,6 +298,20 @@ class Evaluator extends RecursiveResultVisitor {
   }
 
   @override
+  Object? visitMemberVariableSet(MemberVariableSet node) {
+    final receiver = node.receiver;
+    if (receiver.staticType is! ClassType) {
+      throw Exception("receiver is not an instance of a class");
+    }
+
+    final instanceId = node.receiver.accept(this) as int;
+    final instance = _heap.get(instanceId)!;
+
+    final value = node.value.accept(this);
+    return instance.fields[node.name] = value;
+  }
+
+  @override
   Object? visitMemberFunctionInvocation(MemberFunctionInvocation node) {
     final MemberFunctionInvocation(:receiver, :name, :arguments) = node;
 

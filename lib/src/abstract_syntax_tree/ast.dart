@@ -183,6 +183,29 @@ class MemberVariableGet extends Expression {
   }
 }
 
+class MemberVariableSet extends Expression {
+  final Expression receiver;
+  final String name;
+  final Expression value;
+
+  MemberVariableSet(this.receiver, this.name, this.value) {
+    receiver.parent = this;
+    value.parent = this;
+  }
+
+  @override
+  TradType staticType = const DynamicType();
+
+  @override
+  R accept<R>(ExpressionVisitor<R> v) => v.visitMemberVariableSet(this);
+
+  @override
+  void visitChildren(Visitor v) {
+    receiver.accept(v);
+    value.accept(v);
+  }
+}
+
 class MemberFunctionInvocation extends Expression {
   final Expression receiver;
   final String name;
