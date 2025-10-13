@@ -1,7 +1,21 @@
 import '../abstract_syntax_tree/ast.dart';
 
-final globalSymbolTable = SymbolTable();
-SymbolTable currentSymbolTable = globalSymbolTable;
+class SymbolTableContext {
+  final SymbolTable global;
+  late SymbolTable current;
+
+  SymbolTableContext() : global = SymbolTable() {
+    current = global;
+  }
+
+  SymbolTableEntry? lookup(String name) {
+    return current.lookup(name);
+  }
+
+  SymbolTableEntry mustLookup(String name) {
+    return lookup(name) ?? (throw Exception("symbol '$name' is not defined"));
+  }
+}
 
 class SymbolTableEntry {
   final TradType type;
@@ -46,9 +60,5 @@ class SymbolTable {
 
   void operator []=(String name, SymbolTableEntry entry) {
     _entries[name] = entry;
-  }
-
-  void dropAll() {
-    _entries.clear();
   }
 }

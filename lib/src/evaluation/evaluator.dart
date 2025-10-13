@@ -11,7 +11,14 @@ const String _entryPoint = "main";
 class Evaluator extends RecursiveResultVisitor {
   final _heap = Heap();
 
-  Evaluator();
+  final SymbolTableContext context;
+
+  Evaluator(this.context);
+
+  SymbolTable get globalSymbolTable => context.global;
+
+  SymbolTable get currentSymbolTable => context.current;
+  set currentSymbolTable(SymbolTable value) => context.current = value;
 
   @override
   void visitProgram(Program node) {

@@ -21,18 +21,17 @@ List<String> evaluate(String code) {
   final root = const Parser().parse(tokens);
   final ast = const AstBuilder().build(root);
 
-  ast.accept(const SymbolTableBuilder());
+  final context = SymbolTableContext();
+  PreTasker.preTask(context);
+
+  ast.accept(SymbolTableBuilder(context));
   ast.accept(const TypeChecker());
 
-  final outputs = capturePrintLines(() => ast.accept(Evaluator()));
+  final outputs = capturePrintLines(() => ast.accept(Evaluator(context)));
   return outputs;
 }
 
 void main() {
-  setUp(() {
-    PreTasker.preTask();
-  });
-
   test("print test", () {
     const code = """
 void main() {

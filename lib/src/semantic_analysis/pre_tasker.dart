@@ -6,16 +6,20 @@ import 'symbol_table.dart';
 class PreTasker {
   const PreTasker._();
 
-  static void preTask() {
-    // TODO: do not use global variables for the repeatability of tests
-    globalSymbolTable.dropAll();
-    currentSymbolTable = globalSymbolTable;
+  static void preTask(SymbolTableContext symbolTableContext) {
+    symbolTableContext.declareBuiltIns();
+  }
+}
 
+extension BuiltInDeclarationExtension on SymbolTableContext {
+  SymbolTable get globalSymbolTable => global;
+
+  void declareBuiltIns() {
     declareBuiltInFunctions();
     declareBuiltInOperators();
   }
 
-  static void declareBuiltInFunctions() {
+  void declareBuiltInFunctions() {
     globalSymbolTable["print"] = SymbolTableEntry(
       const FunctionType([DynamicType()], VoidType()),
       print,
@@ -26,7 +30,7 @@ class PreTasker {
     );
   }
 
-  static void _declareOperator(
+  void _declareOperator(
     String type,
     String op,
     FunctionType signature,
@@ -38,7 +42,7 @@ class PreTasker {
   }
 
   // TODO: deprecate this when "class", "operator" and "inheritance" system is implemented
-  static void declareBuiltInOperators() {
+  void declareBuiltInOperators() {
     const arithmetic = FunctionType([IntType(), IntType()], IntType());
     _declareOperator("int", "+", arithmetic, (int a, int b) => a + b);
     _declareOperator("int", "-", arithmetic, (int a, int b) => a - b);

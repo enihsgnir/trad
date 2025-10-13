@@ -3,7 +3,14 @@ import '../abstract_syntax_tree/visitor.dart';
 import 'symbol_table.dart';
 
 class SymbolTableBuilder extends RecursiveVisitor {
-  const SymbolTableBuilder();
+  final SymbolTableContext context;
+
+  const SymbolTableBuilder(this.context);
+
+  SymbolTable get globalSymbolTable => context.global;
+
+  SymbolTable get currentSymbolTable => context.current;
+  set currentSymbolTable(SymbolTable value) => context.current = value;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
