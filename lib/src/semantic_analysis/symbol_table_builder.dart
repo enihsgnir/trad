@@ -7,8 +7,6 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   const SymbolTableBuilder(this.context);
 
-  SymbolTable get globalSymbolTable => context.global;
-
   SymbolTable get currentSymbolTable => context.current;
   set currentSymbolTable(SymbolTable value) => context.current = value;
 
@@ -16,7 +14,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
   void visitClassDeclaration(ClassDeclaration node) {
     final name = node.name;
 
-    if (currentSymbolTable.lookup(name) != null) {
+    if (context.lookup(name) != null) {
       throw Exception("symbol $name is already defined");
     }
 
@@ -55,7 +53,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
   @override
   void visitFunctionNode(FunctionNode node) {
     final function = node.parent! as FunctionDeclaration;
-    final entry = currentSymbolTable.lookup(function.variable.name)!;
+    final entry = context.mustLookup(function.variable.name);
     entry.reference = node;
 
     currentSymbolTable = SymbolTable(currentSymbolTable);
@@ -66,10 +64,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   @override
   void visitVariableGet(VariableGet node) {
-    final entry = currentSymbolTable.lookup(node.name);
-    if (entry == null) {
-      throw Exception("symbol ${node.name} is not defined");
-    }
+    final entry = context.mustLookup(node.name);
 
     node.staticType = entry.type;
 
@@ -78,10 +73,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   @override
   void visitVariableSet(VariableSet node) {
-    final entry = currentSymbolTable.lookup(node.name);
-    if (entry == null) {
-      throw Exception("symbol ${node.name} is not defined");
-    }
+    final entry = context.mustLookup(node.name);
 
     if (entry.isFunction) {
       throw Exception("symbol ${node.name} is a function");
@@ -105,10 +97,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final name = "$staticType.$operator";
-    final entry = globalSymbolTable.lookup(name);
-    if (entry == null) {
-      throw Exception("operator $name is not defined");
-    }
+    final entry = context.mustLookupGlobal(name);
 
     final functionType = entry.type as FunctionType;
     node.staticType = functionType.returnType;
@@ -127,10 +116,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final name = "$staticType.unary$operator";
-    final entry = globalSymbolTable.lookup(name);
-    if (entry == null) {
-      throw Exception("operator $name is not defined");
-    }
+    final entry = context.mustLookupGlobal(name);
 
     final functionType = entry.type as FunctionType;
     node.staticType = functionType.returnType;
@@ -138,10 +124,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   @override
   void visitFunctionInvocation(FunctionInvocation node) {
-    final entry = globalSymbolTable.lookup(node.name);
-    if (entry == null) {
-      throw Exception("symbol ${node.name} is not defined");
-    }
+    final entry = context.mustLookupGlobal(node.name);
 
     if (!entry.isFunction) {
       throw Exception("symbol ${node.name} is not a function");
@@ -162,7 +145,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final name = "block@${node.hashCode}";
-    if (currentSymbolTable.lookup(name) != null) {
+    if (context.lookup(name) != null) {
       throw Exception("symbol $name is already defined");
     }
 

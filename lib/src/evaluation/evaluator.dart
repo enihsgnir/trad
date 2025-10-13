@@ -15,8 +15,6 @@ class Evaluator extends RecursiveResultVisitor {
 
   Evaluator(this.context);
 
-  SymbolTable get globalSymbolTable => context.global;
-
   SymbolTable get currentSymbolTable => context.current;
   set currentSymbolTable(SymbolTable value) => context.current = value;
 
@@ -42,7 +40,7 @@ class Evaluator extends RecursiveResultVisitor {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final name = node.name;
-    final entry = currentSymbolTable.lookup(name)!;
+    final entry = context.mustLookup(name);
 
     final classSymbolTable = entry.classSymbolTable!;
     currentSymbolTable = classSymbolTable;
@@ -54,7 +52,7 @@ class Evaluator extends RecursiveResultVisitor {
   void visitVariableDeclaration(VariableDeclaration node) {
     final VariableDeclaration(:name, :initializer) = node;
 
-    final entry = currentSymbolTable.lookup(name)!;
+    final entry = context.mustLookup(name);
     if (initializer != null) {
       entry.reference = initializer.accept(this);
     }
@@ -74,7 +72,7 @@ class Evaluator extends RecursiveResultVisitor {
     }
 
     final name = "block@${node.hashCode}";
-    final entry = currentSymbolTable.lookup(name)!;
+    final entry = context.mustLookup(name);
 
     final blockSymbolTable = entry.blockSymbolTable!;
     currentSymbolTable = blockSymbolTable;
@@ -141,14 +139,14 @@ class Evaluator extends RecursiveResultVisitor {
 
   @override
   Object? visitVariableGet(VariableGet node) {
-    final entry = currentSymbolTable.lookup(node.name)!;
+    final entry = context.mustLookup(node.name);
     return entry.reference;
   }
 
   @override
   Object? visitVariableSet(VariableSet node) {
     final value = node.value.accept(this);
-    currentSymbolTable.lookup(node.name)!.reference = value;
+    context.mustLookup(node.name).reference = value;
     return value;
   }
 
@@ -188,10 +186,7 @@ class Evaluator extends RecursiveResultVisitor {
     }
 
     final name = "${left.staticType}.$operator";
-    final entry = currentSymbolTable.lookup(name);
-    if (entry == null) {
-      throw Exception("binary operator '$operator' not defined");
-    }
+    final entry = context.mustLookup(name);
 
     final function = entry.builtInFunction;
     final lv = left.accept(this);
@@ -212,10 +207,7 @@ class Evaluator extends RecursiveResultVisitor {
     }
 
     final name = "${operand.staticType}.unary$operator";
-    final entry = currentSymbolTable.lookup(name);
-    if (entry == null) {
-      throw Exception("unary operator '$operator' not defined");
-    }
+    final entry = context.mustLookup(name);
 
     final function = entry.builtInFunction;
     return Function.apply(function, [value]);
@@ -239,7 +231,7 @@ class Evaluator extends RecursiveResultVisitor {
   Object? visitFunctionInvocation(FunctionInvocation node) {
     final FunctionInvocation(:name, :arguments) = node;
 
-    final entry = globalSymbolTable.lookup(name)!;
+    final entry = context.mustLookupGlobal(name);
     final reference = entry.reference;
     if (reference is Function) {
       return Function.apply(
@@ -278,7 +270,7 @@ class Evaluator extends RecursiveResultVisitor {
   InstanceId visitDefaultConstructorInvocation(
     DefaultConstructorInvocation node,
   ) {
-    final classEntry = currentSymbolTable.lookup(node.className)!;
+    final classEntry = context.mustLookup(node.className);
     final classRef = classEntry.reference! as ClassDeclaration;
 
     final instance = Instance(classRef);
@@ -329,7 +321,7 @@ class Evaluator extends RecursiveResultVisitor {
       throw Exception("receiver is not an instance of a class");
     }
 
-    final classEntry = globalSymbolTable.lookup(receiverType.name)!;
+    final classEntry = context.mustLookupGlobal(receiverType.name);
     final classSymbolTable = classEntry.classSymbolTable!;
 
     final instanceId = receiver.accept(this) as InstanceId;

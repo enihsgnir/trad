@@ -15,6 +15,15 @@ class SymbolTableContext {
   SymbolTableEntry mustLookup(String name) {
     return lookup(name) ?? (throw Exception("symbol '$name' is not defined"));
   }
+
+  SymbolTableEntry? lookupGlobal(String name) {
+    return global.lookup(name);
+  }
+
+  SymbolTableEntry mustLookupGlobal(String name) {
+    return lookupGlobal(name) ??
+        (throw Exception("symbol '$name' is not defined in global scope"));
+  }
 }
 
 class SymbolTableEntry {
@@ -39,6 +48,8 @@ class SymbolTable {
 
   SymbolTable([this.parent]);
 
+  // TODO: migrate remaining direct lookups on specific `SymbolTable` instances
+  //  to use `SymbolTableContext` for full consistency.
   SymbolTableEntry? lookup(String name) {
     SymbolTable? table = this;
     while (table != null) {
