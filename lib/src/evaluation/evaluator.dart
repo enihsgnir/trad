@@ -328,7 +328,7 @@ class Evaluator extends RecursiveResultVisitor {
     final instance = _heap.get(instanceId)!;
 
     // temporary symbol table for the instance
-    final instanceSymbolTable = SymbolTable(currentSymbolTable);
+    final instanceSymbolTable = currentSymbolTable.createChild();
     for (final MapEntry(:key, :value) in instance.fields.entries) {
       final type = classSymbolTable.lookup(key)!.type;
       instanceSymbolTable[key] = SymbolTableEntry(type, value);

@@ -4,7 +4,7 @@ class SymbolTableContext {
   final SymbolTable global;
   late SymbolTable current;
 
-  SymbolTableContext() : global = SymbolTable() {
+  SymbolTableContext() : global = SymbolTable._() {
     current = global;
   }
 
@@ -46,7 +46,7 @@ class SymbolTable {
   SymbolTable? parent;
   final Map<String, SymbolTableEntry> _entries = {};
 
-  SymbolTable([this.parent]);
+  SymbolTable._([this.parent]);
 
   // TODO: migrate remaining direct lookups on specific `SymbolTable` instances
   //  to use `SymbolTableContext` for full consistency.
@@ -63,8 +63,12 @@ class SymbolTable {
     return null;
   }
 
+  SymbolTable createChild() {
+    return SymbolTable._(this);
+  }
+
   SymbolTable copy([SymbolTable? parent]) {
-    return SymbolTable(parent).._entries.addAll(_entries);
+    return SymbolTable._(parent).._entries.addAll(_entries);
   }
 
   SymbolTableEntry? operator [](String name) => _entries[name];
