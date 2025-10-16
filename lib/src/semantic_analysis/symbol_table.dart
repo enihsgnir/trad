@@ -77,3 +77,35 @@ class SymbolTable {
     _entries[name] = entry;
   }
 }
+
+extension SymbolTableScopeExtension on SymbolTableContext {
+  void withChildScope(void Function() action) {
+    final previous = current;
+    current = current.createChild();
+    try {
+      action();
+    } finally {
+      current = previous;
+    }
+  }
+
+  void withTargetScope(SymbolTable target, void Function() action) {
+    final previous = current;
+    current = target;
+    try {
+      action();
+    } finally {
+      current = previous;
+    }
+  }
+
+  void withCopiedScope(SymbolTable original, void Function() action) {
+    final previous = current;
+    current = original.copy(current);
+    try {
+      action();
+    } finally {
+      current = previous;
+    }
+  }
+}

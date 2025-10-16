@@ -40,9 +40,9 @@ class Evaluator extends RecursiveResultVisitor {
     final entry = context.mustLookup(name);
 
     final classSymbolTable = entry.classSymbolTable!;
-    context.current = classSymbolTable;
-    super.visitClassDeclaration(node);
-    context.current = context.current.parent!;
+    context.withTargetScope(classSymbolTable, () {
+      super.visitClassDeclaration(node);
+    });
   }
 
   @override
@@ -72,9 +72,9 @@ class Evaluator extends RecursiveResultVisitor {
     final entry = context.mustLookup(name);
 
     final blockSymbolTable = entry.blockSymbolTable!;
-    context.current = blockSymbolTable;
-    super.visitBlock(node);
-    context.current = context.current.parent!;
+    context.withTargetScope(blockSymbolTable, () {
+      super.visitBlock(node);
+    });
   }
 
   @override
@@ -228,37 +228,34 @@ class Evaluator extends RecursiveResultVisitor {
   Object? visitFunctionInvocation(FunctionInvocation node) {
     final FunctionInvocation(:name, :arguments) = node;
 
+    final positionalArguments =
+        arguments.positional.map((e) => e.accept(this)).toList();
+
     final entry = context.mustLookupGlobal(name);
     final reference = entry.reference;
     if (reference is Function) {
-      return Function.apply(
-        reference,
-        arguments.positional.map((e) => e.accept(this)).toList(),
-      );
+      return Function.apply(reference, positionalArguments);
     }
 
     final functionSymbolTable = entry.functionSymbolTable!;
-    final newSymbolTable = functionSymbolTable.copy(context.current);
-
-    final functionNode = entry.functionNode;
-    for (final (i, param) in functionNode.parameters.indexed) {
-      newSymbolTable[param.name] = SymbolTableEntry(
-        param.type,
-        arguments.positional[i].accept(this),
-      );
-    }
-    context.current = newSymbolTable;
 
     Object? value;
-    try {
-      // TODO: function call
-      functionNode.body.accept(this);
-    } on ReturnException catch (e) {
-      value = e.value;
-    }
+    context.withCopiedScope(functionSymbolTable, () {
+      final functionNode = entry.functionNode;
+      for (final (i, param) in functionNode.parameters.indexed) {
+        context.current[param.name] = SymbolTableEntry(
+          param.type,
+          positionalArguments[i],
+        );
+      }
 
-    context.current = context.current.parent!;
-    newSymbolTable.parent = null;
+      try {
+        // TODO: function call
+        functionNode.body.accept(this);
+      } on ReturnException catch (e) {
+        value = e.value;
+      }
+    });
 
     return value;
   }
@@ -324,39 +321,34 @@ class Evaluator extends RecursiveResultVisitor {
     final instanceId = receiver.accept(this) as InstanceId;
     final instance = _heap.get(instanceId)!;
 
-    // temporary symbol table for the instance
-    final instanceSymbolTable = classSymbolTable.copy(context.current);
-    for (final MapEntry(:key, :value) in instance.fields.entries) {
-      instanceSymbolTable[key]!.reference = value;
-    }
-    context.current = instanceSymbolTable;
-
-    final functionEntry = classSymbolTable.lookup(name)!;
-    final functionSymbolTable = functionEntry.functionSymbolTable!;
-    final newSymbolTable = functionSymbolTable.copy(context.current);
-
-    final functionNode = functionEntry.functionNode;
-    for (final (i, param) in functionNode.parameters.indexed) {
-      newSymbolTable[param.name] = SymbolTableEntry(
-        param.type,
-        arguments.positional[i].accept(this),
-      );
-    }
-    context.current = newSymbolTable;
-
     Object? value;
-    try {
-      functionNode.body.accept(this);
-    } on ReturnException catch (e) {
-      value = e.value;
-    }
+    context.withCopiedScope(classSymbolTable, () {
+      for (final MapEntry(:key, :value) in instance.fields.entries) {
+        context.current[key]!.reference = value;
+      }
 
-    // restore the current symbol table twice to remove the temporary
-    // symbol tables created for the function and the instance
-    context.current = context.current.parent!;
-    newSymbolTable.parent = null;
-    context.current = context.current.parent!;
-    instanceSymbolTable.parent = null;
+      final positionalArguments =
+          arguments.positional.map((e) => e.accept(this)).toList();
+
+      final functionEntry = classSymbolTable.lookup(name)!;
+      final functionSymbolTable = functionEntry.functionSymbolTable!;
+
+      context.withCopiedScope(functionSymbolTable, () {
+        final functionNode = functionEntry.functionNode;
+        for (final (i, param) in functionNode.parameters.indexed) {
+          context.current[param.name] = SymbolTableEntry(
+            param.type,
+            positionalArguments[i],
+          );
+        }
+
+        try {
+          functionNode.body.accept(this);
+        } on ReturnException catch (e) {
+          value = e.value;
+        }
+      });
+    });
 
     return value;
   }
