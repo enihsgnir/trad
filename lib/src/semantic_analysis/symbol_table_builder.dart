@@ -7,9 +7,6 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   const SymbolTableBuilder(this.context);
 
-  SymbolTable get currentSymbolTable => context.current;
-  set currentSymbolTable(SymbolTable value) => context.current = value;
-
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final name = node.name;
@@ -18,21 +15,21 @@ class SymbolTableBuilder extends RecursiveVisitor {
       throw Exception("symbol $name is already defined");
     }
 
-    final classSymbolTable = currentSymbolTable.createChild();
+    final classSymbolTable = context.current.createChild();
 
     final entry = SymbolTableEntry(ClassType(name));
     entry.reference = node;
     entry.classSymbolTable = classSymbolTable;
-    currentSymbolTable[name] = entry;
+    context.current[name] = entry;
 
-    currentSymbolTable = classSymbolTable;
+    context.current = classSymbolTable;
     super.visitClassDeclaration(node);
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
   }
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    if (currentSymbolTable[node.name] != null) {
+    if (context.current[node.name] != null) {
       throw Exception("symbol ${node.name} is already defined");
     }
 
@@ -46,7 +43,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final entry = SymbolTableEntry(node.type, initializer);
-    currentSymbolTable[node.name] = entry;
+    context.current[node.name] = entry;
     super.visitVariableDeclaration(node);
   }
 
@@ -56,10 +53,10 @@ class SymbolTableBuilder extends RecursiveVisitor {
     final entry = context.mustLookup(function.variable.name);
     entry.reference = node;
 
-    currentSymbolTable = currentSymbolTable.createChild();
-    entry.functionSymbolTable = currentSymbolTable;
+    context.current = context.current.createChild();
+    entry.functionSymbolTable = context.current;
     super.visitFunctionNode(node);
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
   }
 
   @override
@@ -149,14 +146,14 @@ class SymbolTableBuilder extends RecursiveVisitor {
       throw Exception("symbol $name is already defined");
     }
 
-    final blockSymbolTable = currentSymbolTable.createChild();
+    final blockSymbolTable = context.current.createChild();
 
     final entry = SymbolTableEntry(const VoidType());
     entry.blockSymbolTable = blockSymbolTable;
-    currentSymbolTable[name] = entry;
+    context.current[name] = entry;
 
-    currentSymbolTable = blockSymbolTable;
+    context.current = blockSymbolTable;
     super.visitBlock(node);
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
   }
 }

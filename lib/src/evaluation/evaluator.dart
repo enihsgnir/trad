@@ -15,9 +15,6 @@ class Evaluator extends RecursiveResultVisitor {
 
   Evaluator(this.context);
 
-  SymbolTable get currentSymbolTable => context.current;
-  set currentSymbolTable(SymbolTable value) => context.current = value;
-
   @override
   void visitProgram(Program node) {
     super.visitProgram(node);
@@ -43,9 +40,9 @@ class Evaluator extends RecursiveResultVisitor {
     final entry = context.mustLookup(name);
 
     final classSymbolTable = entry.classSymbolTable!;
-    currentSymbolTable = classSymbolTable;
+    context.current = classSymbolTable;
     super.visitClassDeclaration(node);
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
   }
 
   @override
@@ -75,9 +72,9 @@ class Evaluator extends RecursiveResultVisitor {
     final entry = context.mustLookup(name);
 
     final blockSymbolTable = entry.blockSymbolTable!;
-    currentSymbolTable = blockSymbolTable;
+    context.current = blockSymbolTable;
     super.visitBlock(node);
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
   }
 
   @override
@@ -241,7 +238,7 @@ class Evaluator extends RecursiveResultVisitor {
     }
 
     final functionSymbolTable = entry.functionSymbolTable!;
-    final newSymbolTable = functionSymbolTable.copy(currentSymbolTable);
+    final newSymbolTable = functionSymbolTable.copy(context.current);
 
     final functionNode = entry.functionNode;
     for (final (i, param) in functionNode.parameters.indexed) {
@@ -250,7 +247,7 @@ class Evaluator extends RecursiveResultVisitor {
         arguments.positional[i].accept(this),
       );
     }
-    currentSymbolTable = newSymbolTable;
+    context.current = newSymbolTable;
 
     Object? value;
     try {
@@ -260,7 +257,7 @@ class Evaluator extends RecursiveResultVisitor {
       value = e.value;
     }
 
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
     newSymbolTable.parent = null;
 
     return value;
@@ -328,15 +325,15 @@ class Evaluator extends RecursiveResultVisitor {
     final instance = _heap.get(instanceId)!;
 
     // temporary symbol table for the instance
-    final instanceSymbolTable = classSymbolTable.copy(currentSymbolTable);
+    final instanceSymbolTable = classSymbolTable.copy(context.current);
     for (final MapEntry(:key, :value) in instance.fields.entries) {
       instanceSymbolTable[key]!.reference = value;
     }
-    currentSymbolTable = instanceSymbolTable;
+    context.current = instanceSymbolTable;
 
     final functionEntry = classSymbolTable.lookup(name)!;
     final functionSymbolTable = functionEntry.functionSymbolTable!;
-    final newSymbolTable = functionSymbolTable.copy(currentSymbolTable);
+    final newSymbolTable = functionSymbolTable.copy(context.current);
 
     final functionNode = functionEntry.functionNode;
     for (final (i, param) in functionNode.parameters.indexed) {
@@ -345,7 +342,7 @@ class Evaluator extends RecursiveResultVisitor {
         arguments.positional[i].accept(this),
       );
     }
-    currentSymbolTable = newSymbolTable;
+    context.current = newSymbolTable;
 
     Object? value;
     try {
@@ -356,9 +353,9 @@ class Evaluator extends RecursiveResultVisitor {
 
     // restore the current symbol table twice to remove the temporary
     // symbol tables created for the function and the instance
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
     newSymbolTable.parent = null;
-    currentSymbolTable = currentSymbolTable.parent!;
+    context.current = context.current.parent!;
     instanceSymbolTable.parent = null;
 
     return value;

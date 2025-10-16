@@ -12,19 +12,17 @@ class PreTasker {
 }
 
 extension BuiltInDeclarationExtension on SymbolTableContext {
-  SymbolTable get globalSymbolTable => global;
-
   void declareBuiltIns() {
     declareBuiltInFunctions();
     declareBuiltInOperators();
   }
 
   void declareBuiltInFunctions() {
-    globalSymbolTable["print"] = SymbolTableEntry(
+    global["print"] = SymbolTableEntry(
       const FunctionType([DynamicType()], VoidType()),
       print,
     );
-    globalSymbolTable["readLine"] = SymbolTableEntry(
+    global["readLine"] = SymbolTableEntry(
       const FunctionType([], StringType()),
       stdin.readLineSync,
     );
@@ -38,7 +36,7 @@ extension BuiltInDeclarationExtension on SymbolTableContext {
     bool isUnary = false,
   }) {
     final id = type + (isUnary ? ".unary" : ".") + op;
-    globalSymbolTable[id] = SymbolTableEntry(signature, func);
+    global[id] = SymbolTableEntry(signature, func);
   }
 
   // TODO: deprecate this when "class", "operator" and "inheritance" system is implemented
