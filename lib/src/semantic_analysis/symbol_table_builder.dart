@@ -10,13 +10,8 @@ class SymbolTableBuilder extends RecursiveVisitor {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final name = node.name;
-
-    if (context.lookup(name) != null) {
-      throw Exception("symbol $name is already defined");
-    }
-
     final entry = SymbolTableEntry(ClassType(name), node);
-    context.current[name] = entry;
+    context.define(name, entry);
 
     context.withChildScope(() {
       entry.classSymbolTable = context.current;
@@ -26,10 +21,6 @@ class SymbolTableBuilder extends RecursiveVisitor {
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
-    if (context.current[node.name] != null) {
-      throw Exception("symbol ${node.name} is already defined");
-    }
-
     if (node.type == const VoidType()) {
       throw Exception("symbol type cannot be void");
     }
@@ -40,7 +31,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final entry = SymbolTableEntry(node.type, initializer);
-    context.current[node.name] = entry;
+    context.define(node.name, entry);
     super.visitVariableDeclaration(node);
   }
 
@@ -139,12 +130,8 @@ class SymbolTableBuilder extends RecursiveVisitor {
     }
 
     final name = "block@${node.hashCode}";
-    if (context.lookup(name) != null) {
-      throw Exception("symbol $name is already defined");
-    }
-
     final entry = SymbolTableEntry(const VoidType());
-    context.current[name] = entry;
+    context.define(name, entry);
 
     context.withChildScope(() {
       entry.blockSymbolTable = context.current;

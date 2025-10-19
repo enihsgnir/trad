@@ -24,6 +24,14 @@ class SymbolTableContext {
     return lookupGlobal(name) ??
         (throw Exception("symbol '$name' is not defined in global scope"));
   }
+
+  void define(String name, SymbolTableEntry entry) {
+    if (current[name] != null) {
+      throw Exception("symbol '$name' is already defined");
+    }
+
+    current[name] = entry;
+  }
 }
 
 class SymbolTableEntry {
