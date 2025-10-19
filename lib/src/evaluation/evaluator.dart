@@ -243,7 +243,7 @@ class Evaluator extends RecursiveResultVisitor {
     context.withCopiedScope(functionSymbolTable, () {
       final functionNode = entry.functionNode;
       for (final (i, param) in functionNode.parameters.indexed) {
-        context.current[param.name]!.reference = positionalArguments[i];
+        context.assignLocal(param.name, positionalArguments[i]);
       }
 
       try {
@@ -321,7 +321,7 @@ class Evaluator extends RecursiveResultVisitor {
     Object? value;
     context.withCopiedScope(classSymbolTable, () {
       for (final MapEntry(:key, :value) in instance.fields.entries) {
-        context.current[key]!.reference = value;
+        context.assignLocal(key, value);
       }
 
       final positionalArguments =
@@ -333,7 +333,7 @@ class Evaluator extends RecursiveResultVisitor {
       context.withCopiedScope(functionSymbolTable, () {
         final functionNode = functionEntry.functionNode;
         for (final (i, param) in functionNode.parameters.indexed) {
-          context.current[param.name]!.reference = positionalArguments[i];
+          context.assignLocal(param.name, positionalArguments[i]);
         }
 
         try {

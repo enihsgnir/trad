@@ -25,12 +25,31 @@ class SymbolTableContext {
         (throw Exception("symbol '$name' is not defined in global scope"));
   }
 
+  SymbolTableEntry? lookupLocal(String name) {
+    return current[name];
+  }
+
+  SymbolTableEntry mustLookupLocal(String name) {
+    return lookupLocal(name) ??
+        (throw Exception("symbol '$name' is not defined in local scope"));
+  }
+
   void define(String name, SymbolTableEntry entry) {
     if (current[name] != null) {
       throw Exception("symbol '$name' is already defined");
     }
 
     current[name] = entry;
+  }
+
+  void assign(String name, Object? reference) {
+    final entry = mustLookup(name);
+    entry.reference = reference;
+  }
+
+  void assignLocal(String name, Object? reference) {
+    final entry = mustLookupLocal(name);
+    entry.reference = reference;
   }
 }
 
