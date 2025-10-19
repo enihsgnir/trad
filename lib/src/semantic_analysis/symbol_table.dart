@@ -40,6 +40,13 @@ class SymbolTableEntry {
 
   FunctionNode get functionNode => reference! as FunctionNode;
   Function get builtInFunction => reference! as Function;
+
+  SymbolTableEntry copy() {
+    return SymbolTableEntry(type, reference)
+      ..classSymbolTable = classSymbolTable
+      ..functionSymbolTable = functionSymbolTable
+      ..blockSymbolTable = blockSymbolTable;
+  }
 }
 
 class SymbolTable {
@@ -68,7 +75,11 @@ class SymbolTable {
   }
 
   SymbolTable copy([SymbolTable? parent]) {
-    return SymbolTable._(parent).._entries.addAll(_entries);
+    return SymbolTable._(parent)
+      .._entries.addAll({
+        for (final MapEntry(:key, :value) in _entries.entries)
+          key: value.copy(),
+      });
   }
 
   SymbolTableEntry? operator [](String name) => _entries[name];

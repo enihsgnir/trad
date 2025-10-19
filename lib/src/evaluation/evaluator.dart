@@ -243,10 +243,7 @@ class Evaluator extends RecursiveResultVisitor {
     context.withCopiedScope(functionSymbolTable, () {
       final functionNode = entry.functionNode;
       for (final (i, param) in functionNode.parameters.indexed) {
-        context.current[param.name] = SymbolTableEntry(
-          param.type,
-          positionalArguments[i],
-        );
+        context.current[param.name]!.reference = positionalArguments[i];
       }
 
       try {
@@ -336,10 +333,7 @@ class Evaluator extends RecursiveResultVisitor {
       context.withCopiedScope(functionSymbolTable, () {
         final functionNode = functionEntry.functionNode;
         for (final (i, param) in functionNode.parameters.indexed) {
-          context.current[param.name] = SymbolTableEntry(
-            param.type,
-            positionalArguments[i],
-          );
+          context.current[param.name]!.reference = positionalArguments[i];
         }
 
         try {
