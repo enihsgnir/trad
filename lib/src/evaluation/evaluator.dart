@@ -173,16 +173,16 @@ class Evaluator extends RecursiveResultVisitor {
 
   @override
   Object? visitBinaryExpression(BinaryExpression node) {
-    final BinaryExpression(:left, :operator, :right) = node;
+    final BinaryExpression(:left, :operatorSymbol, :right) = node;
 
-    if (operator == "!=") {
+    if (operatorSymbol == "!=") {
       return UnaryExpression(
         "!",
         EqualityExpression(left, "==", right),
       ).accept(this);
     }
 
-    final name = "${left.staticType}.$operator";
+    final name = "${left.staticType}.$operatorSymbol";
     final entry = context.mustLookup(name);
 
     final function = entry.builtInFunction;
@@ -193,17 +193,17 @@ class Evaluator extends RecursiveResultVisitor {
 
   @override
   Object? visitUnaryExpression(UnaryExpression node) {
-    final UnaryExpression(:operator, :operand) = node;
+    final UnaryExpression(:operatorSymbol, :operand) = node;
     final value = operand.accept(this);
 
-    if (operator == "!") {
+    if (operatorSymbol == "!") {
       if (value as bool) {
         return false;
       }
       return true;
     }
 
-    final name = "${operand.staticType}.unary$operator";
+    final name = "${operand.staticType}.unary$operatorSymbol";
     final entry = context.mustLookup(name);
 
     final function = entry.builtInFunction;

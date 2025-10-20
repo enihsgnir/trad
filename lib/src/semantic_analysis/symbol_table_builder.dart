@@ -74,14 +74,14 @@ class SymbolTableBuilder extends RecursiveVisitor {
     super.visitBinaryExpression(node);
 
     final staticType = node.left.staticType;
-    final operator = node.operator;
+    final operatorSymbol = node.operatorSymbol;
 
-    if (operator == "!=") {
+    if (operatorSymbol == "!=") {
       node.staticType = const BoolType();
       return;
     }
 
-    final name = "$staticType.$operator";
+    final name = "$staticType.$operatorSymbol";
     final entry = context.mustLookupGlobal(name);
 
     final functionType = entry.type as FunctionType;
@@ -93,14 +93,14 @@ class SymbolTableBuilder extends RecursiveVisitor {
     super.visitUnaryExpression(node);
 
     final staticType = node.operand.staticType;
-    final operator = node.operator;
+    final operatorSymbol = node.operatorSymbol;
 
-    if (staticType is BoolType && operator == "!") {
+    if (staticType is BoolType && operatorSymbol == "!") {
       node.staticType = const BoolType();
       return;
     }
 
-    final name = "$staticType.unary$operator";
+    final name = "$staticType.unary$operatorSymbol";
     final entry = context.mustLookupGlobal(name);
 
     final functionType = entry.type as FunctionType;

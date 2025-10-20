@@ -274,9 +274,9 @@ extension on ParseTreeNode {
     }
 
     final left = children[0].toRelationalExpression();
-    final operator = children[1].symbol.name;
+    final operatorSymbol = children[1].symbol.name;
     final right = children[2].toRelationalExpression();
-    return EqualityExpression(left, operator, right);
+    return EqualityExpression(left, operatorSymbol, right);
   }
 
   Expression toRelationalExpression() {
@@ -285,9 +285,9 @@ extension on ParseTreeNode {
     }
 
     final left = children[0].toAdditiveExpression();
-    final operator = children[1].symbol.name;
+    final operatorSymbol = children[1].symbol.name;
     final right = children[2].toAdditiveExpression();
-    return RelationalExpression(left, operator, right);
+    return RelationalExpression(left, operatorSymbol, right);
   }
 
   Expression toAdditiveExpression() {
@@ -296,9 +296,9 @@ extension on ParseTreeNode {
     }
 
     final left = children[0].toAdditiveExpression();
-    final operator = children[1].symbol.name;
+    final operatorSymbol = children[1].symbol.name;
     final right = children[2].toMultiplicativeExpression();
-    return AdditiveExpression(left, operator, right);
+    return AdditiveExpression(left, operatorSymbol, right);
   }
 
   Expression toMultiplicativeExpression() {
@@ -307,9 +307,9 @@ extension on ParseTreeNode {
     }
 
     final left = children[0].toMultiplicativeExpression();
-    final operator = children[1].symbol.name;
+    final operatorSymbol = children[1].symbol.name;
     final right = children[2].toUnaryExpression();
-    return MultiplicativeExpression(left, operator, right);
+    return MultiplicativeExpression(left, operatorSymbol, right);
   }
 
   Expression toUnaryExpression() {
@@ -317,9 +317,9 @@ extension on ParseTreeNode {
       return children[0].toPrimary();
     }
 
-    final operator = children[0].symbol.name;
+    final operatorSymbol = children[0].symbol.name;
     final operand = children[1].toUnaryExpression();
-    return UnaryExpression(operator, operand);
+    return UnaryExpression(operatorSymbol, operand);
   }
 
   Expression toPrimary() {

@@ -72,7 +72,8 @@ class TypeChecker extends RecursiveVisitor {
 
   @override
   void visitUnaryExpression(UnaryExpression node) {
-    if (node.operator == "!" && node.operand.staticType != const BoolType()) {
+    if (node.operatorSymbol == "!" &&
+        node.operand.staticType != const BoolType()) {
       throw Exception("not operator type mismatch");
     }
 

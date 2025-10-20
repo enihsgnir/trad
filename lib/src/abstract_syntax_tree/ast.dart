@@ -267,13 +267,13 @@ class ConditionalExpression extends Expression {
 
 sealed class BinaryExpression extends Expression {
   Expression left;
-  String operator;
+  String operatorSymbol;
   Expression right;
 
   @override
   TradType staticType = const DynamicType();
 
-  BinaryExpression(this.left, this.operator, this.right) {
+  BinaryExpression(this.left, this.operatorSymbol, this.right) {
     left.parent = this;
     right.parent = this;
   }
@@ -289,7 +289,7 @@ sealed class BinaryExpression extends Expression {
 }
 
 class LogicalOrExpression extends BinaryExpression {
-  LogicalOrExpression(super.left, super.operator, super.right);
+  LogicalOrExpression(super.left, super.operatorSymbol, super.right);
 
   @override
   TradType get staticType => const BoolType();
@@ -299,7 +299,7 @@ class LogicalOrExpression extends BinaryExpression {
 }
 
 class LogicalAndExpression extends BinaryExpression {
-  LogicalAndExpression(super.left, super.operator, super.right);
+  LogicalAndExpression(super.left, super.operatorSymbol, super.right);
 
   @override
   TradType get staticType => const BoolType();
@@ -309,35 +309,35 @@ class LogicalAndExpression extends BinaryExpression {
 }
 
 class EqualityExpression extends BinaryExpression {
-  EqualityExpression(super.left, super.operator, super.right);
+  EqualityExpression(super.left, super.operatorSymbol, super.right);
 
   @override
   TradType get staticType => const BoolType();
 }
 
 class RelationalExpression extends BinaryExpression {
-  RelationalExpression(super.left, super.operator, super.right);
+  RelationalExpression(super.left, super.operatorSymbol, super.right);
 
   @override
   TradType get staticType => const BoolType();
 }
 
 class AdditiveExpression extends BinaryExpression {
-  AdditiveExpression(super.left, super.operator, super.right);
+  AdditiveExpression(super.left, super.operatorSymbol, super.right);
 }
 
 class MultiplicativeExpression extends BinaryExpression {
-  MultiplicativeExpression(super.left, super.operator, super.right);
+  MultiplicativeExpression(super.left, super.operatorSymbol, super.right);
 }
 
 class UnaryExpression extends Expression {
-  String operator;
+  String operatorSymbol;
   Expression operand;
 
   @override
   TradType staticType = const DynamicType();
 
-  UnaryExpression(this.operator, this.operand) {
+  UnaryExpression(this.operatorSymbol, this.operand) {
     operand.parent = this;
   }
 
