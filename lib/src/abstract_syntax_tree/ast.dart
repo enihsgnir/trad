@@ -33,9 +33,9 @@ class Program extends TreeNode {
 // Functions
 
 class FunctionNode extends TreeNode {
-  TradType returnType;
-  List<VariableDeclaration> parameters;
-  Block body;
+  final TradType returnType;
+  final List<VariableDeclaration> parameters;
+  final Block body;
 
   FunctionNode(
     this.returnType,
@@ -85,8 +85,8 @@ class VariableSet extends Expression {
   @override
   TradType staticType = const DynamicType();
 
-  String name;
-  Expression value;
+  final String name;
+  final Expression value;
 
   VariableSet(this.name, this.value) {
     value.parent = this;
@@ -122,8 +122,8 @@ class Arguments extends TreeNode {
 }
 
 class FunctionInvocation extends Expression {
-  String name;
-  Arguments arguments;
+  final String name;
+  final Arguments arguments;
   FunctionType functionType;
 
   FunctionInvocation(
@@ -237,9 +237,9 @@ class MemberFunctionInvocation extends Expression {
 }
 
 class ConditionalExpression extends Expression {
-  Expression condition;
-  Expression then;
-  Expression otherwise;
+  final Expression condition;
+  final Expression then;
+  final Expression otherwise;
 
   ConditionalExpression(
     this.condition,
@@ -266,9 +266,9 @@ class ConditionalExpression extends Expression {
 }
 
 sealed class BinaryExpression extends Expression {
-  Expression left;
-  String operatorSymbol;
-  Expression right;
+  final Expression left;
+  final String operatorSymbol;
+  final Expression right;
 
   @override
   TradType staticType = const DynamicType();
@@ -331,8 +331,8 @@ class MultiplicativeExpression extends BinaryExpression {
 }
 
 class UnaryExpression extends Expression {
-  String operatorSymbol;
-  Expression operand;
+  final String operatorSymbol;
+  final Expression operand;
 
   @override
   TradType staticType = const DynamicType();
@@ -359,7 +359,7 @@ sealed class BasicLiteral extends Expression {
 
 class IntLiteral extends BasicLiteral {
   @override
-  int value;
+  final int value;
 
   IntLiteral(this.value);
 
@@ -372,7 +372,7 @@ class IntLiteral extends BasicLiteral {
 
 class StringLiteral extends BasicLiteral {
   @override
-  String value;
+  final String value;
 
   StringLiteral(this.value);
 
@@ -385,7 +385,7 @@ class StringLiteral extends BasicLiteral {
 
 class BoolLiteral extends BasicLiteral {
   @override
-  bool value;
+  final bool value;
 
   BoolLiteral(this.value);
 
@@ -397,7 +397,7 @@ class BoolLiteral extends BasicLiteral {
 }
 
 class ListLiteral extends Expression {
-  TradType typeArgument;
+  final TradType typeArgument;
   final List<Expression> expressions;
 
   ListLiteral(
@@ -523,9 +523,9 @@ class WhileStatement extends Statement {
 }
 
 class IfStatement extends Statement {
-  Expression condition;
-  Block then;
-  Statement? otherwise;
+  final Expression condition;
+  final Block then;
+  final Statement? otherwise;
 
   IfStatement(this.condition, this.then, this.otherwise) {
     condition.parent = this;
@@ -545,7 +545,7 @@ class IfStatement extends Statement {
 }
 
 class ReturnStatement extends Statement {
-  Expression? expression;
+  final Expression? expression;
 
   ReturnStatement([this.expression]) {
     expression?.parent = this;
@@ -577,8 +577,8 @@ sealed class Declaration extends Statement {
 }
 
 class ClassDeclaration extends Declaration {
-  String name;
-  List<ClassMemberDeclaration> members;
+  final String name;
+  final List<ClassMemberDeclaration> members;
 
   ClassDeclaration(this.name, this.members) {
     setParents(members, this);
@@ -601,9 +601,9 @@ class ClassDeclaration extends Declaration {
 mixin ClassMemberDeclaration on Declaration {}
 
 class VariableDeclaration extends Declaration with ClassMemberDeclaration {
-  String name;
-  TradType type;
-  Expression? initializer;
+  final String name;
+  final TradType type;
+  final Expression? initializer;
 
   VariableDeclaration(
     this.name, [
@@ -624,8 +624,8 @@ class VariableDeclaration extends Declaration with ClassMemberDeclaration {
 }
 
 class FunctionDeclaration extends Declaration with ClassMemberDeclaration {
-  VariableDeclaration variable; // Is final and has no initializer.
-  FunctionNode function;
+  final VariableDeclaration variable; // Is final and has no initializer.
+  final FunctionNode function;
 
   FunctionDeclaration(this.variable, this.function) {
     variable.parent = this;
