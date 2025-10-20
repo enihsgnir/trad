@@ -18,7 +18,7 @@ class Program extends TreeNode {
   final List<Declaration> declarations;
 
   Program(this.declarations) {
-    setParents(declarations, this);
+    declarations.parent = this;
   }
 
   @override
@@ -26,7 +26,7 @@ class Program extends TreeNode {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(declarations, v);
+    declarations.accept(v);
   }
 }
 
@@ -42,7 +42,7 @@ class FunctionNode extends TreeNode {
     this.body, {
     List<VariableDeclaration>? parameters,
   }) : parameters = parameters ?? [] {
-    setParents(this.parameters, this);
+    this.parameters.parent = this;
     body.parent = this;
   }
 
@@ -51,7 +51,7 @@ class FunctionNode extends TreeNode {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(parameters, v);
+    parameters.accept(v);
     returnType.accept(v);
     body.accept(v);
   }
@@ -105,7 +105,7 @@ class Arguments extends TreeNode {
   final List<Expression> positional;
 
   Arguments(this.positional) {
-    setParents(positional, this);
+    positional.parent = this;
   }
 
   Arguments.empty() : positional = [];
@@ -117,7 +117,7 @@ class Arguments extends TreeNode {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(positional, v);
+    positional.accept(v);
   }
 }
 
@@ -404,7 +404,7 @@ class ListLiteral extends Expression {
     this.expressions, {
     this.typeArgument = const DynamicType(),
   }) {
-    setParents(expressions, this);
+    expressions.parent = this;
   }
 
   @override
@@ -416,7 +416,7 @@ class ListLiteral extends Expression {
   @override
   void visitChildren(Visitor v) {
     typeArgument.accept(v);
-    visitList(expressions, v);
+    expressions.accept(v);
   }
 }
 
@@ -447,7 +447,7 @@ class Block extends Statement {
   final List<Statement> statements;
 
   Block(this.statements) {
-    setParents(statements, this);
+    statements.parent = this;
   }
 
   void addStatement(Statement node) {
@@ -460,7 +460,7 @@ class Block extends Statement {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(statements, v);
+    statements.accept(v);
   }
 }
 
@@ -581,7 +581,7 @@ class ClassDeclaration extends Declaration {
   final List<ClassMemberDeclaration> members;
 
   ClassDeclaration(this.name, this.members) {
-    setParents(members, this);
+    members.parent = this;
   }
 
   List<VariableDeclaration> get fields =>
@@ -594,7 +594,7 @@ class ClassDeclaration extends Declaration {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(members, v);
+    members.accept(v);
   }
 }
 
@@ -772,7 +772,7 @@ class FunctionType extends TradType {
 
   @override
   void visitChildren(Visitor v) {
-    visitList(parameters, v);
+    parameters.accept(v);
     returnType.accept(v);
   }
 
@@ -808,16 +808,20 @@ class ClassType extends TradType {
   }
 }
 
-// Internal Functions
+// Internal Extensions
 
-void setParents(List<TreeNode> nodes, TreeNode parent) {
-  for (final node in nodes) {
-    node.parent = parent;
+extension on List<TreeNode> {
+  set parent(TreeNode parent) {
+    for (final node in this) {
+      node.parent = parent;
+    }
   }
 }
 
-void visitList(List<Node> nodes, Visitor visitor) {
-  for (final node in nodes) {
-    node.accept(visitor);
+extension on List<Node> {
+  void accept(Visitor visitor) {
+    for (final node in this) {
+      node.accept(visitor);
+    }
   }
 }
