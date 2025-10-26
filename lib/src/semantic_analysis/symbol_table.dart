@@ -17,7 +17,7 @@ class SymbolTableContext {
   }
 
   SymbolTableEntry? lookupGlobal(String name) {
-    return global.lookup(name);
+    return global[name];
   }
 
   SymbolTableEntry mustLookupGlobal(String name) {
