@@ -25,12 +25,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
       throw Exception("symbol type cannot be void");
     }
 
-    final initializer = node.initializer;
-    if (initializer != null && node.type != initializer.staticType) {
-      throw Exception("type mismatch");
-    }
-
-    final entry = SymbolTableEntry(node.type, initializer);
+    final entry = SymbolTableEntry(node.type, node.initializer);
     context.define(node.name, entry);
     super.visitVariableDeclaration(node);
   }
