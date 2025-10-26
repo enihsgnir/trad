@@ -68,7 +68,7 @@ class Evaluator extends RecursiveResultVisitor {
       return;
     }
 
-    final name = "block@${node.hashCode}";
+    final name = "block@${identityHashCode(node)}";
     final entry = context.mustLookup(name);
 
     final blockSymbolTable = entry.blockSymbolTable!;

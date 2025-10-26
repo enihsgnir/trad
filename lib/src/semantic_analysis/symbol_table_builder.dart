@@ -129,7 +129,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
       return super.visitBlock(node);
     }
 
-    final name = "block@${node.hashCode}";
+    final name = "block@${identityHashCode(node)}";
     final entry = SymbolTableEntry(const VoidType());
     context.define(name, entry);
 
