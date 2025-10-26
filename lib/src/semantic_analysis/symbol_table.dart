@@ -101,10 +101,10 @@ class SymbolTable {
     return SymbolTable._(this);
   }
 
-  SymbolTable copy([SymbolTable? parent]) {
-    return SymbolTable._(parent)
+  SymbolTable copy(SymbolTable original) {
+    return SymbolTable._(this)
       .._entries.addAll({
-        for (final MapEntry(:key, :value) in _entries.entries)
+        for (final MapEntry(:key, :value) in original._entries.entries)
           key: value.copy(),
       });
   }
@@ -139,7 +139,7 @@ extension SymbolTableScopeExtension on SymbolTableContext {
 
   void withCopiedScope(SymbolTable original, void Function() action) {
     final previous = current;
-    current = original.copy(current);
+    current = current.copy(original);
     try {
       action();
     } finally {
