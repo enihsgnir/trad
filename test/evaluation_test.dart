@@ -42,6 +42,28 @@ void main() {
     expect(evaluate(code), ["hello, world!"]);
   });
 
+  test("identical test", () {
+    const code = """
+void main() {
+  print(identical(42, 42));
+  print(identical(false, false));
+  print(identical(42, 21));
+  print(identical(true, false));
+  print(identical(42, 21 + 21));
+  print(identical("hello", "hello"));
+}
+""";
+
+    expect(evaluate(code), [
+      "true",
+      "true",
+      "false",
+      "false",
+      "true",
+      "false",
+    ]);
+  });
+
   test("arithmetic test", () {
     const code = """
 void main() {

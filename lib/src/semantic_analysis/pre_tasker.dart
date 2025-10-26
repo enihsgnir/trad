@@ -20,6 +20,10 @@ extension BuiltInDeclarationExtension on SymbolTableContext {
       const FunctionType([DynamicType()], VoidType()),
       print,
     );
+    global["identical"] = SymbolTableEntry(
+      const FunctionType([DynamicType(), DynamicType()], BoolType()),
+      identical,
+    );
   }
 
   void _declareOperator(
