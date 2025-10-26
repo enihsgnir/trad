@@ -327,7 +327,7 @@ class Evaluator extends RecursiveResultVisitor {
       final positionalArguments =
           arguments.positional.map((e) => e.accept(this)).toList();
 
-      final functionEntry = classSymbolTable.lookup(name)!;
+      final functionEntry = context.mustLookupLocal(name);
       final functionSymbolTable = functionEntry.functionSymbolTable!;
 
       context.withCopiedScope(functionSymbolTable, () {

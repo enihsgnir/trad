@@ -82,8 +82,6 @@ class SymbolTable {
 
   SymbolTable._([this.parent]);
 
-  // TODO: migrate remaining direct lookups on specific `SymbolTable` instances
-  //  to use `SymbolTableContext` for full consistency.
   SymbolTableEntry? lookup(String name) {
     SymbolTable? table = this;
     while (table != null) {
