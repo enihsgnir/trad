@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../abstract_syntax_tree/ast.dart';
 import 'symbol_table.dart';
 
@@ -21,10 +19,6 @@ extension BuiltInDeclarationExtension on SymbolTableContext {
     global["print"] = SymbolTableEntry(
       const FunctionType([DynamicType()], VoidType()),
       print,
-    );
-    global["readLine"] = SymbolTableEntry(
-      const FunctionType([], StringType()),
-      stdin.readLineSync,
     );
   }
 
