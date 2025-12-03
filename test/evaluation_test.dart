@@ -442,5 +442,28 @@ void main() {
       final lines = evaluate(code);
       expect(lines, ["42", "42"]);
     });
+
+    test("class member variable mutation test", () {
+      const code = """
+class A {
+  int a = 21;
+
+  void doubleA() {
+    a = a * 2;
+  }
+}
+
+void main() {
+  A a = new A();
+  print(a.a);
+
+  a.doubleA();
+  print(a.a);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["21", "42"]);
+    });
   });
 }

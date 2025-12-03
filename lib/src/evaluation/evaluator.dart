@@ -320,6 +320,7 @@ class Evaluator extends RecursiveResultVisitor {
 
     Object? value;
     context.withCopiedScope(classSymbolTable, () {
+      // copy instance fields to context local variables
       for (final MapEntry(:key, :value) in instance.fields.entries) {
         context.assignLocal(key, value);
       }
@@ -342,6 +343,11 @@ class Evaluator extends RecursiveResultVisitor {
           value = e.value;
         }
       });
+
+      // save context local variables back to instance fields
+      for (final key in instance.fields.keys) {
+        instance.fields[key] = context.mustLookupLocal(key).reference;
+      }
     });
 
     return value;
