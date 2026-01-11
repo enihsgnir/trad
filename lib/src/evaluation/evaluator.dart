@@ -265,6 +265,18 @@ class Evaluator extends RecursiveResultVisitor {
     final classRef = classEntry.reference! as ClassDeclaration;
 
     final instance = Instance(classRef);
+    _construct(classRef, instance);
+
+    return _heap.allocate(instance);
+  }
+
+  void _construct(ClassDeclaration classRef, Instance instance) {
+    final superclassName = classRef.superclassName;
+    if (superclassName != null) {
+      final superclassEntry = context.mustLookup(superclassName);
+      final superclassRef = superclassEntry.reference! as ClassDeclaration;
+      _construct(superclassRef, instance);
+    }
 
     final fields = classRef.fields;
     for (final field in fields) {
@@ -272,8 +284,6 @@ class Evaluator extends RecursiveResultVisitor {
       final value = field.initializer?.accept(this);
       instance.fields[name] = value;
     }
-
-    return _heap.allocate(instance);
   }
 
   @override

@@ -465,5 +465,31 @@ void main() {
       final lines = evaluate(code);
       expect(lines, ["21", "42"]);
     });
+
+    test("class inheritance test", () {
+      const code = """
+class A {
+  int a = 1;
+}
+
+class B extends A {
+  int b = 10;
+}
+
+class C extends B {
+  int c = 100;
+}
+
+void main() {
+  C c = new C();
+  print(c.a);
+  print(c.b);
+  print(c.c);
+}
+""";
+
+      final lines = evaluate(code);
+      expect(lines, ["1", "10", "100"]);
+    });
   });
 }

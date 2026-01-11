@@ -17,6 +17,11 @@ definition
 
 classDeclaration
   : 'class' id '{' classMemberDeclarations '}'
+  | 'class' id superclass '{' classMemberDeclarations '}'
+  ;
+
+superclass
+  : 'extends' id
   ;
 
 classMemberDeclarations

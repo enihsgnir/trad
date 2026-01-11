@@ -34,8 +34,15 @@ extension on ParseTreeNode {
 
   ClassDeclaration toClassDeclaration() {
     final id = children[1].symbol.toString();
-    final members = children[3].toClassMemberDeclarations();
-    return ClassDeclaration(id, members);
+
+    if (children.length == 5) {
+      final members = children[3].toClassMemberDeclarations();
+      return ClassDeclaration(id, members);
+    }
+
+    final superclassName = children[2].children[1].symbol.toString();
+    final members = children[4].toClassMemberDeclarations();
+    return ClassDeclaration(id, members, superclassName: superclassName);
   }
 
   List<ClassMemberDeclaration> toClassMemberDeclarations() {

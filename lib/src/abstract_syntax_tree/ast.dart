@@ -578,9 +578,10 @@ sealed class Declaration extends Statement {
 
 class ClassDeclaration extends Declaration {
   final String name;
+  final String? superclassName;
   final List<ClassMemberDeclaration> members;
 
-  ClassDeclaration(this.name, this.members) {
+  ClassDeclaration(this.name, this.members, {this.superclassName}) {
     members.parent = this;
   }
 
