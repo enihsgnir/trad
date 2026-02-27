@@ -65,4 +65,63 @@ void main() {
       expect(matches.map((e) => e.group(0)), equals(expected));
     }
   });
+
+  test("single line string sq literal test", () {
+    final matcher = SingleLineStringSqLiteralToken().matcher;
+
+    const validTokens = [
+      "'hello'",
+      r"'it\'s ok'",
+      r"'line\n\rok'",
+      "'a \"quote\" in single'",
+      r"'bad\qescape'",
+      r"'cost: \$42'",
+    ];
+
+    for (final token in validTokens) {
+      final match = matcher.matchAsPrefix(token);
+      expect(match, isNotNull, reason: "expected valid: $token");
+      expect(match!.end, equals(token.length), reason: "must consume all");
+    }
+
+    const invalidTokens = [
+      "'hello\nworld'",
+      r"'has $ interpolation'",
+      "'unterminated",
+    ];
+
+    for (final token in invalidTokens) {
+      final match = matcher.matchAsPrefix(token);
+      expect(match, isNull, reason: "expected invalid: $token");
+    }
+  });
+
+  test("single line string dq literal test", () {
+    final matcher = SingleLineStringDqLiteralToken().matcher;
+
+    const validTokens = [
+      '"hello"',
+      r'"line\n\rok"',
+      r'"a \"quote\""',
+      r'"bad\qescape"',
+      r'"cost: \$42"',
+    ];
+
+    for (final token in validTokens) {
+      final match = matcher.matchAsPrefix(token);
+      expect(match, isNotNull, reason: "expected valid: $token");
+      expect(match!.end, equals(token.length), reason: "must consume all");
+    }
+
+    const invalidTokens = [
+      '"hello\nworld"',
+      r'"has $ interpolation"',
+      '"unterminated',
+    ];
+
+    for (final token in invalidTokens) {
+      final match = matcher.matchAsPrefix(token);
+      expect(match, isNull, reason: "expected invalid: $token");
+    }
+  });
 }

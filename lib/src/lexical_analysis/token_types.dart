@@ -6,7 +6,8 @@ final List<TokenType> tokenTypes = [
   KeywordToken(),
   IdentifierToken(),
   IntegerLiteralToken(),
-  StringLiteralToken(),
+  SingleLineStringSqLiteralToken(),
+  SingleLineStringDqLiteralToken(),
 ];
 
 sealed class TokenType {
@@ -147,11 +148,50 @@ class NumericLiteralToken extends DynamicToken {
   static const dot = r'\.';
 }
 
-class StringLiteralToken extends DynamicToken {
-  /// `(["'])((?:\\\1|(?:(?!\1)).)*)\1`
-  StringLiteralToken()
-      : super("str", RegExp('(["\'])((?:\\\\\\1|(?:(?!\\1)).)*)\\1'));
+/// String Literal Tokens
+///
+/// Supports:
+/// - Single-line quoted string literals: `'...'`, `"..."`
+///
+/// Disallows:
+/// - Raw strings
+/// - Multiline strings
+/// - String interpolation: `$...`
+/// - Unicode escapes string with `\x` or `\u`
+sealed class StringLiteralToken extends DynamicToken {
+  final RegExp regExp;
+
+  const StringLiteralToken(this.regExp) : super("str", regExp);
+}
+
+sealed class SingleLineStringLiteralToken extends StringLiteralToken {
+  const SingleLineStringLiteralToken(super.regExp);
+}
+
+class SingleLineStringSqLiteralToken extends SingleLineStringLiteralToken {
+  SingleLineStringSqLiteralToken() : super(RegExp(stringLiteral));
+
+  static const stringLiteral = "'($sqUnit*)'";
+
+  static const sqUnit = '($plainChar|$backslashChar)';
+
+  static const plainChar = r"[^\\'$\n\r]";
+  static const backslashChar = r'\\[^\n\r]';
 
   @override
-  String lexemeFrom(Match match) => match[2]!;
+  String lexemeFrom(Match match) => match[1]!;
+}
+
+class SingleLineStringDqLiteralToken extends SingleLineStringLiteralToken {
+  SingleLineStringDqLiteralToken() : super(RegExp(stringLiteral));
+
+  static const stringLiteral = '"($dqUnit*)"';
+
+  static const dqUnit = '($plainChar|$backslashChar)';
+
+  static const plainChar = r'[^\\"$\n\r]';
+  static const backslashChar = r'\\[^\n\r]';
+
+  @override
+  String lexemeFrom(Match match) => match[1]!;
 }
