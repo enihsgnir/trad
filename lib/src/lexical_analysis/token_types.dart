@@ -41,6 +41,7 @@ sealed class StaticToken extends TokenType {
 class OperatorToken extends StaticToken {
   OperatorToken() : super(RegExp(_operators.map(RegExp.escape).join("|")));
 
+  // longest match first, e.g. `>=` before `>`
   static const _operators = [
     "+",
     "-",
