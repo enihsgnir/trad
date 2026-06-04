@@ -323,19 +323,11 @@ class Evaluator extends RecursiveResultVisitor {
       throw Exception("receiver is not an instance of a class");
     }
 
-    final classEntry = context.mustLookupGlobal(receiverType.name);
-    final classSymbolTable = classEntry.classSymbolTable!;
-
     final instanceId = receiver.accept(this) as InstanceId;
     final instance = _heap.get(instanceId)!;
 
     Object? value;
-    context.withCopiedScope(classSymbolTable, () {
-      // copy instance fields to context local variables
-      for (final MapEntry(:key, :value) in instance.fields.entries) {
-        context.assignLocal(key, value);
-      }
-
+    context.withInstanceScope(instance, () {
       final positionalArguments =
           arguments.positional.map((e) => e.accept(this)).toList();
 
@@ -354,11 +346,6 @@ class Evaluator extends RecursiveResultVisitor {
           value = e.value;
         }
       });
-
-      // save context local variables back to instance fields
-      for (final key in instance.fields.keys) {
-        instance.fields[key] = context.mustLookupLocal(key).reference;
-      }
     });
 
     return value;

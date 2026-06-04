@@ -1,4 +1,5 @@
 import '../abstract_syntax_tree/ast.dart';
+import '../evaluation/instance.dart';
 
 class SymbolTableContext {
   final SymbolTable global;
@@ -140,6 +141,26 @@ extension SymbolTableScopeExtension on SymbolTableContext {
     current = current.copy(original);
     try {
       action();
+    } finally {
+      current = previous;
+    }
+  }
+
+  void withInstanceScope(Instance instance, void Function() action) {
+    final previous = current;
+    current = current.copy(instance.classSymbolTable);
+    try {
+      // copy instance fields to context local variables
+      for (final MapEntry(:key, :value) in instance.fields.entries) {
+        assignLocal(key, value);
+      }
+
+      action();
+
+      // save context local variables back to instance fields
+      for (final key in instance.fields.keys) {
+        instance.fields[key] = mustLookupLocal(key).reference;
+      }
     } finally {
       current = previous;
     }
