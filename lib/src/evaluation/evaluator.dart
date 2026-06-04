@@ -263,8 +263,9 @@ class Evaluator extends RecursiveResultVisitor {
   ) {
     final classEntry = context.mustLookup(node.className);
     final classRef = classEntry.reference! as ClassDeclaration;
+    final classSymbolTable = classEntry.classSymbolTable!;
 
-    final instance = Instance(classRef);
+    final instance = Instance(classRef, classSymbolTable);
     _construct(classRef, instance);
 
     return _heap.allocate(instance);
