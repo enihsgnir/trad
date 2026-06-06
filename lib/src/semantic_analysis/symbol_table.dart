@@ -57,9 +57,7 @@ class SymbolTableContext {
 class SymbolTableEntry {
   final TradType type;
   Object? reference;
-  SymbolTable? classSymbolTable;
-  SymbolTable? functionSymbolTable;
-  SymbolTable? blockSymbolTable;
+  SymbolTable? symbolTable;
 
   SymbolTableEntry(this.type, [this.reference]);
 
@@ -70,10 +68,7 @@ class SymbolTableEntry {
   Function get builtInFunction => reference! as Function;
 
   SymbolTableEntry copy() {
-    return SymbolTableEntry(type, reference)
-      ..classSymbolTable = classSymbolTable
-      ..functionSymbolTable = functionSymbolTable
-      ..blockSymbolTable = blockSymbolTable;
+    return SymbolTableEntry(type, reference)..symbolTable = symbolTable;
   }
 }
 

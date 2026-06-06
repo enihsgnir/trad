@@ -39,7 +39,7 @@ class Evaluator extends RecursiveResultVisitor {
     final name = node.name;
     final entry = context.mustLookup(name);
 
-    final classSymbolTable = entry.classSymbolTable!;
+    final classSymbolTable = entry.symbolTable!;
     context.withTargetScope(classSymbolTable, () {
       super.visitClassDeclaration(node);
     });
@@ -71,7 +71,7 @@ class Evaluator extends RecursiveResultVisitor {
     final name = "block@${identityHashCode(node)}";
     final entry = context.mustLookup(name);
 
-    final blockSymbolTable = entry.blockSymbolTable!;
+    final blockSymbolTable = entry.symbolTable!;
     context.withTargetScope(blockSymbolTable, () {
       super.visitBlock(node);
     });
@@ -237,7 +237,7 @@ class Evaluator extends RecursiveResultVisitor {
       return Function.apply(reference, positionalArguments);
     }
 
-    final functionSymbolTable = entry.functionSymbolTable!;
+    final functionSymbolTable = entry.symbolTable!;
 
     Object? value;
     context.withCopiedScope(functionSymbolTable, () {
@@ -263,7 +263,7 @@ class Evaluator extends RecursiveResultVisitor {
   ) {
     final classEntry = context.mustLookup(node.className);
     final classRef = classEntry.reference! as ClassDeclaration;
-    final classSymbolTable = classEntry.classSymbolTable!;
+    final classSymbolTable = classEntry.symbolTable!;
 
     final instance = Instance(classRef, classSymbolTable);
     _construct(classRef, instance);
@@ -332,7 +332,7 @@ class Evaluator extends RecursiveResultVisitor {
           arguments.positional.map((e) => e.accept(this)).toList();
 
       final functionEntry = context.mustLookupLocal(name);
-      final functionSymbolTable = functionEntry.functionSymbolTable!;
+      final functionSymbolTable = functionEntry.symbolTable!;
 
       context.withCopiedScope(functionSymbolTable, () {
         final functionNode = functionEntry.functionNode;

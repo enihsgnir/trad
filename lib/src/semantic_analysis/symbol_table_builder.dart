@@ -14,7 +14,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     context.define(name, entry);
 
     context.withChildScope(() {
-      entry.classSymbolTable = context.current;
+      entry.symbolTable = context.current;
       super.visitClassDeclaration(node);
     });
   }
@@ -37,7 +37,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     entry.reference = node;
 
     context.withChildScope(() {
-      entry.functionSymbolTable = context.current;
+      entry.symbolTable = context.current;
       super.visitFunctionNode(node);
     });
   }
@@ -129,7 +129,7 @@ class SymbolTableBuilder extends RecursiveVisitor {
     context.define(name, entry);
 
     context.withChildScope(() {
-      entry.blockSymbolTable = context.current;
+      entry.symbolTable = context.current;
       super.visitBlock(node);
     });
   }
