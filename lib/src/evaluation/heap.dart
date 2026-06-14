@@ -1,15 +1,12 @@
 import 'instance.dart';
 
 extension type InstanceId(int id) {
-  // TODO: consider using a more complex ID generation strategy
-  static final seed = InstanceId(0);
-
   InstanceId operator +(int value) => InstanceId(id + value);
 }
 
 class Heap {
   final Map<InstanceId, Instance> _instances = {};
-  InstanceId _nextInstanceId = InstanceId.seed;
+  InstanceId _nextInstanceId = InstanceId(0);
 
   InstanceId allocate(Instance instance) {
     final id = _nextInstanceId++;
