@@ -67,7 +67,19 @@ class TypeChecker extends RecursiveVisitor {
     super.visitVariableSet(node);
   }
 
-  // TODO: handle conditional expression
+  @override
+  void visitConditionalExpression(ConditionalExpression node) {
+    if (node.condition.staticType != const BoolType()) {
+      throw Exception("conditional expression condition type mismatch");
+    }
+
+    if (node.then.staticType != node.otherwise.staticType) {
+      throw Exception("conditional expression values type mismatch");
+    }
+
+    super.visitConditionalExpression(node);
+  }
+
   // TODO: handle binary expressions
 
   @override
