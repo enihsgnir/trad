@@ -234,6 +234,8 @@ class Evaluator extends RecursiveResultVisitor {
     final entry = context.mustLookupGlobal(name);
     final reference = entry.reference;
     if (reference is Function) {
+      // TODO: native function calls should be handled through a single,
+      //  structured call path rather than from multiple evaluator branches
       return Function.apply(reference, positionalArguments);
     }
 
@@ -247,7 +249,6 @@ class Evaluator extends RecursiveResultVisitor {
       }
 
       try {
-        // TODO: function call
         functionNode.body.accept(this);
       } on ReturnException catch (e) {
         value = e.value;
